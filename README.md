@@ -1,4 +1,5 @@
-zip
-===
+comodojo.zip
+==============
 
-poor man's php zip/unzip class
+> poor man's php zip/unzip class
+
