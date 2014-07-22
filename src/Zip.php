@@ -1,4 +1,4 @@
-<?php namespace comodojo\Zip;
+<?php namespace Comodojo\Zip;
 
 /**
  * zip: poor man's php zip/unzip class
@@ -23,12 +23,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use \comodojo\Exception\ZipException;
+use \Comodojo\Exception\ZipException;
 
 /**
  * Comodojo zip main class
  */
-class zip {
+class Zip {
 	
 	/**
 	 * If true, zip will skip hidden files
@@ -86,7 +86,7 @@ class zip {
 	/**
 	 * Internal pointer to zip archive
 	 */
-	private $zip_archive = NULL;
+	private $zip_archive = null;
 
 	/**
 	 * Set files to skip
@@ -161,7 +161,7 @@ class zip {
 		
 		try {
 			
-			$this->zip_archive = $check ? $this->openZipFile($zip_file, \ZipArchive::CHECKCONS) : $this->openZipFile($zip_file, NULL);
+			$this->zip_archive = $check ? $this->openZipFile($zip_file, \ZipArchive::CHECKCONS) : $this->openZipFile($zip_file, null);
 
 		}
 		catch (ZipException $ze) {
@@ -242,7 +242,7 @@ class zip {
 	 *
 	 * @return 	Object	$this
 	 */
-	public final function extract($destination, $files=NULL) {
+	public final function extract($destination, $files=null) {
 
 		if ( empty($destination) ) throw new ZipException('Invalid destination path');
 
@@ -356,7 +356,7 @@ class zip {
 	 *
 	 * @return 	Object	ZipArchive
 	 */
-	private function openZipFile($zip_file, $flags=NULL) {
+	private function openZipFile($zip_file, $flags=null) {
 
 		$zip = new \ZipArchive;
 
@@ -403,7 +403,7 @@ class zip {
 	 * @param	int	$file	File to add (realpath)
 	 * @param	int	$base	(optional) Base to record in zip file
 	 */
-	private function add_item($file, $base=NULL) {
+	private function add_item($file, $base=null) {
 
 		$real_file = str_replace('\\', '/', realpath($file));
 
@@ -477,5 +477,3 @@ class zip {
 	}
 
 }
-
-?>

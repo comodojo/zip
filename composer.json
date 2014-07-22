@@ -7,7 +7,7 @@
         "unzip",
         "ZipArchive"
     ],
-    "homepage": "http://zip.comodojo.org",
+    "homepage": "http://www.comodojo.org",
     "authors": [
         {
             "name": "Marco Giovinazzi",
@@ -18,7 +18,10 @@
         "issues": "https://github.com/comodojo/zip/issues"
     },
     "autoload": {
-        "psr-4": {"comodojo\\Zip\\": "src"}
+        "psr-4": {
+             "Comodojo\\Exception\\": "src/Exception",
+             "Comodojo\\Zip\\": "src"
+         }
     },
     "minimum-stability": "dev"
 }

@@ -1,4 +1,4 @@
-<?php namespace comodojo\Exception;
+<?php namespace Comodojo\Exception;
 
 /**
  * zip exception handler
@@ -27,5 +27,3 @@
  * Simply extend exception
  */
 class ZipException extends \Exception {}
-
-?>
