@@ -1,9 +1,11 @@
 <?php namespace Comodojo\Zip;
 
+use \Comodojo\Exception\ZipException;
+
 /**
  * zip: poor man's php zip/unzip class
  * 
- * @package     Comodojo zip (Spare Parts)
+ * @package     Comodojo Spare Parts
  * @author      Marco Giovinazzi <info@comodojo.org>
  * @license     GPL-3.0+
  *
@@ -23,11 +25,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use \Comodojo\Exception\ZipException;
-
-/**
- * Comodojo zip main class
- */
 class Zip {
     
     /**
