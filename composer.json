@@ -1,17 +1,17 @@
 {
     "name": "comodojo/zip",
-    "description": "poor man's php zip/unzip class",
-    "license": "GPL-3.0+",
+    "description": "Zip archive toolbox",
+    "license": "MIT",
     "keywords": [
         "zip",
         "unzip",
         "ZipArchive"
     ],
-    "homepage": "http://www.comodojo.org",
+    "homepage": "http://comodojo.org",
     "authors": [
         {
             "name": "Marco Giovinazzi",
-            "email": "info@comodojo.org"
+            "email": "marco.giovinazzi@comodojo.org"
         }
     ],
     "support": {
@@ -23,5 +23,7 @@
              "Comodojo\\Zip\\": "src"
          }
     },
-    "minimum-stability": "dev"
+    "require-dev": {
+        "phpunit/phpunit": "~4.0"
+    }
 }

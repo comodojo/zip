@@ -1,5 +1,4 @@
-comodojo.zip
-==============
+# comodojo/zip
 
-> poor man's php zip/unzip class
+Zip archive toolbox
 
