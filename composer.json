@@ -1,11 +1,13 @@
 {
     "name": "comodojo/zip",
-    "description": "Zip archive toolbox",
+    "description": "ZipArchive toolbox",
     "license": "MIT",
     "keywords": [
         "zip",
         "unzip",
-        "ZipArchive"
+        "ZipArchive",
+        "multiple",
+        "merge"
     ],
     "homepage": "http://comodojo.org",
     "authors": [

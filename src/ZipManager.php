@@ -5,10 +5,10 @@ use \Comodojo\Exception\ZipException;
 use \Exception;
 
 /**
- * Multiple zip archive mangager
+ * Multiple ZipArchive manager
  * 
  * @package     Comodojo Spare Parts
- * @author      Marco Giovinazzi <info@comodojo.org>
+ * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
  *
  * LICENSE:
@@ -22,10 +22,22 @@ use \Exception;
  * THE SOFTWARE.
  */
  
- class ZipManager {
+class ZipManager {
 
+    /**
+     * Array of managed zip files
+     *
+     * @var array
+     */
     private $zip_archives = array();
     
+    /**
+     * Add a \Coodojo\Zip\Zip object to manager
+     *
+     * @param   \Comodojo\Zip\Zip  $zip
+     * 
+     * @return  \Comodojo\Zip\ZipManager
+     */
     public function addZip(\Comodojo\Zip\Zip $zip) {
         
         $this->zip_archives[] = $zip;
@@ -34,6 +46,14 @@ use \Exception;
         
     }
     
+    /**
+     * Remove a \Coodojo\Zip\Zip object from manager
+     *
+     * @param   \Comodojo\Zip\Zip  $zip
+     * 
+     * @return  \Comodojo\Zip\ZipManager
+     * @throws  \Comodojo\Exception\ZipException
+     */
     public function removeZip(\Comodojo\Zip\Zip $zip) {
         
         $archive_key = array_search($zip, $this->zip_archives, true);
@@ -46,6 +66,11 @@ use \Exception;
         
     }
     
+    /**
+     * Get a list of managed Zips
+     *
+     * @return  array
+     */
     public function listZips() {
         
         $list = array();
@@ -56,6 +81,14 @@ use \Exception;
         
     }
     
+    /**
+     * Get a  a \Coodojo\Zip\Zip object
+     *
+     * @param   int    $zipId    The zip id from self::listZips()
+     * 
+     * @return  \Comodojo\Zip\Zip
+     * @throws  \Comodojo\Exception\ZipException
+     */
     public function getZip($zipId) {
         
         if ( array_key_exists($zipId, $this->zip_archives) === false) throw new ZipException("Archive not found");
@@ -65,12 +98,12 @@ use \Exception;
     }
     
     /**
-     * Set current base path (just for add relative files to zip archive)
+     * Set current base path (just to add relative files to zip archive)
      * for all zip files
      *
      * @param   string  $path
      *
-     * @return  \Comodojo\Zip\Zip
+     * @return  \Comodojo\Zip\ZipManager
      * @throws  \Comodojo\Exception\ZipException
      */
     public function setPath($path) {
@@ -89,6 +122,11 @@ use \Exception;
         
     }
     
+    /**
+     * Get a list of paths used by Zips
+     *
+     * @return  array
+     */
     public function getPath() {
         
         $paths = array();
@@ -99,11 +137,19 @@ use \Exception;
         
     }
     
-    public function setMask() {
+    /**
+     * Set default file mask for all Zips
+     *
+     * @param   string  $path
+     *
+     * @return  \Comodojo\Zip\ZipManager
+     * @throws  \Comodojo\Exception\ZipException
+     */
+    public function setMask($mask) {
         
         try {
             
-            foreach ($this->zip_archives as $archive) $archive->setPath($path);
+            foreach ($this->zip_archives as $archive) $archive->setMask($mask);
             
         } catch (ZipException $ze) {
             
@@ -115,6 +161,11 @@ use \Exception;
         
     }
     
+    /**
+     * Get a list of masks from Zips
+     *
+     * @return  array
+     */
     public function getMask() {
         
         $masks = array();
@@ -125,6 +176,12 @@ use \Exception;
         
     }
     
+    /**
+     * Get a list of files in Zips
+     *
+     * @return  array
+     * @throws  \Comodojo\Exception\ZipException
+     */
     public function listFiles() {
         
         $files = array();
@@ -139,10 +196,20 @@ use \Exception;
             
         }
         
-        return $masks;
+        return $files;
         
     }
     
+    /**
+     * Extract Zips to common destination
+     * 
+     * @param   string  $destination    Destination path
+     * @param   bool    $separate       Specify if files should be placed in different directories
+     * @param   array   $files          Array of files to extract
+     *
+     * @return  bool
+     * @throws  \Comodojo\Exception\ZipException
+     */
     public function extract($destination, $separate=true, $files=null) {
         
         try {
@@ -169,6 +236,15 @@ use \Exception;
         
     }
     
+    /**
+     * Merge multiple Zips into one
+     * 
+     * @param   string  $output_zip_file    Destination zip
+     * @param   bool    $separate           Specify if files should be placed in different directories
+     *
+     * @return  bool
+     * @throws  \Comodojo\Exception\ZipException
+     */
     public function merge($output_zip_file, $separate=true) {
         
         $pathinfo = pathinfo($output_zip_file);
@@ -199,11 +275,20 @@ use \Exception;
         
     }
     
-    public function add($file_name_or_array) {
+    /**
+     * Add a file to zip
+     * 
+     * @param   mixed   $file_name_or_array     filename to add or an array of filenames
+     * @param   bool    $flatten_root_folder    in case of directory, specify if root folder should be flatten or not
+     *
+     * @return  \Comodojo\Zip\ZipManager
+     * @throws  \Comodojo\Exception\ZipException
+     */
+    public function add($file_name_or_array, $flatten_root_folder=false) {
         
         try {
         
-            foreach ($this->zip_archives as $archive) $archive->add($file_name_or_array);
+            foreach ($this->zip_archives as $archive) $archive->add($file_name_or_array, $flatten_root_folder);
             
         } catch (ZipException $ze) {
             
@@ -215,6 +300,14 @@ use \Exception;
         
     }
     
+    /**
+     * Delete a file from Zips
+     * 
+     * @param   mixed   $file_name_or_array     filename to add or an array of filenames
+     *
+     * @return  \Comodojo\Zip\ZipManager
+     * @throws  \Comodojo\Exception\ZipException
+     */
     public function delete($file_name_or_array) {
         
         try {
@@ -231,6 +324,12 @@ use \Exception;
         
     }
     
+    /**
+     * Close Zips
+     * 
+     * @return  bool
+     * @throws  \Comodojo\Exception\ZipException
+     */
     public function close() {
         
         try {
@@ -288,4 +387,4 @@ use \Exception;
 
     }
     
- }
+}

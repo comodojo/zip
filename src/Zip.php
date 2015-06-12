@@ -4,10 +4,12 @@ use \ZipArchive;
 use \Comodojo\Exception\ZipException;
 
 /**
- * zip: poor man's php zip/unzip class
+ * comodojo/zip - ZipArchive toolbox
+ * 
+ * This class provide methods to handle single zip archive
  * 
  * @package     Comodojo Spare Parts
- * @author      Marco Giovinazzi <info@comodojo.org>
+ * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
  *
  * LICENSE:
@@ -123,7 +125,7 @@ class Zip {
     /**
      * Open a zip archive
      *
-     * @param   string  $zip_file   ZIP archive
+     * @param   string  $zip_file   ZIP file name
      * 
      * @return  \Comodojo\Zip\Zip
      * @throws  \Comodojo\Exception\ZipException
@@ -150,7 +152,7 @@ class Zip {
     /**
      * Check a zip archive
      *
-     * @param   string  $zip_file   ZIP archive
+     * @param   string  $zip_file   ZIP file name
      *
      * @return  bool
      * @throws  \Comodojo\Exception\ZipException
@@ -159,7 +161,7 @@ class Zip {
 
         try {
 
-            $zip = self::openZipFile($zip_file, \ZipArchive::CHECKCONS);
+            $zip = self::openZipFile($zip_file, ZipArchive::CHECKCONS);
 
             $zip->close();
 
@@ -177,18 +179,27 @@ class Zip {
     /**
      * Create a new zip archive
      *
-     * @param   string  $zip_file   ZIP archive
+     * @param   string  $zip_file   ZIP file name
+     * @param   bool    $overwrite  overwrite existing file (if any)
      *
      * @return  \Comodojo\Zip\Zip
      * @throws  \Comodojo\Exception\ZipException
      */
-    static public function create($zip_file) {
+    static public function create($zip_file, $overwrite=false) {
+
+        $overwrite = filter_var($overwrite, FILTER_VALIDATE_BOOLEAN, array(
+            "options" => array(
+                "default" => false
+            )
+        ));
 
         try {
 
             $zip = new Zip($zip_file);
             
-            $zip->setArchive( self::openZipFile($zip_file, \ZipArchive::CREATE) );
+            if ( $overwrite ) $zip->setArchive( self::openZipFile($zip_file, ZipArchive::CREATE | ZipArchive::OVERWRITE) );
+            
+            else $zip->setArchive( self::openZipFile($zip_file, ZipArchive::CREATE) );
 
         }
         catch (ZipException $ze) {
@@ -204,7 +215,7 @@ class Zip {
     /**
      * Set files to skip
      *
-     * @param   string  $mode   HIDDEN, COMODOJO, ALL, NONE
+     * @param   string  $mode   [HIDDEN, COMODOJO, ALL, NONE]
      *
      * @return  \Comodojo\Zip\Zip
      * @throws  \Comodojo\Exception\ZipException
@@ -259,7 +270,7 @@ class Zip {
     }
 
     /**
-     * Set current base path (just for add relative files to zip archive)
+     * Set current base path (just to add relative files to zip archive)
      *
      * @param   string  $path
      *
@@ -358,20 +369,6 @@ class Zip {
     }
 
     /**
-     * Close the zip archive
-     *
-     * @return  bool
-     * @throws  \Comodojo\Exception\ZipException
-     */
-    public function close() {
-
-        if ( $this->zip_archive->close() === false ) throw new ZipException(self::getStatus($this->zip_archive->status));
-
-        return true;
-
-    }
-
-    /**
      * Get a list of files in archive (array)
      *
      * @return  array
@@ -443,22 +440,29 @@ class Zip {
      * Add files to zip archive
      *
      * @param   mixed   $file_name_or_array     filename to add or an array of filenames
+     * @param   bool    $flatten_root_folder    in case of directory, specify if root folder should be flatten or not
      *
      * @return  \ZipArchive
      * @throws  \Comodojo\Exception\ZipException
      */
-    public function add($file_name_or_array, $flat_root_folder=false) {
+    public function add($file_name_or_array, $flatten_root_folder=false) {
 
         if ( empty($file_name_or_array) ) throw new ZipException(self::getStatus(ZipArchive::ER_NOENT ));
+        
+        $flatten_root_folder = filter_var($flatten_root_folder, FILTER_VALIDATE_BOOLEAN, array(
+            "options" => array(
+                "default" => false
+            )
+        ));
 
         try {
 
             if ( is_array($file_name_or_array) ) {
 
-                foreach ($file_name_or_array as $file_name) $this->addItem($file_name, $flat_root_folder);
+                foreach ($file_name_or_array as $file_name) $this->addItem($file_name, $flatten_root_folder);
 
             }
-            else $this->addItem($file_name_or_array, $flat_root_folder);
+            else $this->addItem($file_name_or_array, $flatten_root_folder);
             
         } catch (ZipException $ze) {
             
@@ -498,6 +502,20 @@ class Zip {
         }
 
         return $this;
+
+    }
+
+    /**
+     * Close the zip archive
+     *
+     * @return  bool
+     * @throws  \Comodojo\Exception\ZipException
+     */
+    public function close() {
+
+        if ( $this->zip_archive->close() === false ) throw new ZipException(self::getStatus($this->zip_archive->status));
+
+        return true;
 
     }
 
