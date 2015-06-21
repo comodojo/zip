@@ -10,7 +10,7 @@ Have you found a bug? Raise an issues on [Github](https://github.com/comodojo/zi
 
 - **Search the issue or pull request list first**.
 
-- **Check the [master branch](https://github.com/comodojo/zip)** to see if the bug has already been fixed-
+- **Check the [master branch](https://github.com/comodojo/zip)** to see if the bug has already been fixed.
 
 ### When submitting your report
 

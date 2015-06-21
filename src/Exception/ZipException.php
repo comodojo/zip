@@ -1,7 +1,8 @@
 <?php namespace Comodojo\Exception;
 
 /**
- * zip exception handler
+ * ZipException; nothing special, just an extension of
+ * standard Exception class.
  * 
  * @package     Comodojo Spare Parts
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
@@ -18,7 +19,4 @@
  * THE SOFTWARE.
  */
 
-/**
- * Simply extend exception
- */
 class ZipException extends \Exception {}
