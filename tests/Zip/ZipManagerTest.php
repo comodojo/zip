@@ -109,4 +109,15 @@ class ZipManagerTest extends \PHPUnit_Framework_TestCase {
         
     }
 
+    /**
+     * @expectedException        Comodojo\Exception\ZipException
+     */
+    public function testInvalidZipId() {
+
+        $manager = new ZipManager();
+
+        $manager->getZip(123456);
+
+    }
+
 }

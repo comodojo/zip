@@ -184,4 +184,15 @@ class ZipTest extends \PHPUnit_Framework_TestCase {
         
     }
 
+    /**
+     * @expectedException        Comodojo\Exception\ZipException
+     */
+    public function testInvalidSkipMode() {
+
+        $zip = new Zip(__DIR__.'/../tmp/test_2.zip');
+
+        $zip->setSkipped("FOO");
+
+    }
+
 }
