@@ -115,7 +115,7 @@ class Zip {
      */
     public function __construct($zip_file) {
 
-        if (empty($zip_file)) throw new ZipException(self::getStatus(ZipArchive::ER_NOENT));
+        if ( empty($zip_file) ) throw new ZipException(self::getStatus(ZipArchive::ER_NOENT));
 
         $this->zip_file = $zip_file;
 
@@ -137,8 +137,7 @@ class Zip {
             
             $zip->setArchive(self::openZipFile($zip_file));
 
-        }
-        catch (ZipException $ze) {
+        } catch (ZipException $ze) {
 
             throw $ze;
 
@@ -164,8 +163,7 @@ class Zip {
 
             $zip->close();
 
-        }
-        catch (ZipException $ze) {
+        } catch (ZipException $ze) {
 
             throw $ze;
 
@@ -196,12 +194,11 @@ class Zip {
 
             $zip = new Zip($zip_file);
             
-            if ($overwrite) $zip->setArchive(self::openZipFile($zip_file, ZipArchive::CREATE | ZipArchive::OVERWRITE));
+            if ( $overwrite ) $zip->setArchive(self::openZipFile($zip_file, ZipArchive::CREATE | ZipArchive::OVERWRITE));
             
             else $zip->setArchive(self::openZipFile($zip_file, ZipArchive::CREATE));
 
-        }
-        catch (ZipException $ze) {
+        } catch (ZipException $ze) {
 
             throw $ze;
 
@@ -223,7 +220,7 @@ class Zip {
 
         $mode = strtoupper($mode);
 
-        if (!in_array($mode, $this->supported_skip_modes)) throw new ZipException("Unsupported skip mode");
+        if ( !in_array($mode, $this->supported_skip_modes) ) throw new ZipException("Unsupported skip mode");
         
         $this->skip_mode = $mode;
 
@@ -278,7 +275,7 @@ class Zip {
      */
     final public function setPath($path) {
 
-        if (!file_exists($path)) throw new ZipException("Not existent path");
+        if ( !file_exists($path) ) throw new ZipException("Not existent path");
 
         $this->path = $path[strlen($path) - 1] == "/" ? $path : $path."/";
 
@@ -377,11 +374,11 @@ class Zip {
 
         $list = Array();
 
-        for ($i = 0; $i < $this->zip_archive->numFiles; $i++) {
+        for ( $i = 0; $i < $this->zip_archive->numFiles; $i++ ) {
 
             $name = $this->zip_archive->getNameIndex($i);
 
-            if ($name === false) throw new ZipException(self::getStatus($this->zip_archive->status));
+            if ( $name === false ) throw new ZipException(self::getStatus($this->zip_archive->status));
 
             array_push($list, $name);
 
@@ -402,9 +399,9 @@ class Zip {
      */
     public function extract($destination, $files = null) {
 
-        if (empty($destination)) throw new ZipException('Invalid destination path');
+        if ( empty($destination) ) throw new ZipException('Invalid destination path');
 
-        if (!file_exists($destination)) {
+        if ( !file_exists($destination) ) {
 
             $omask = umask(0);
 
@@ -412,24 +409,23 @@ class Zip {
             
             umask($omask);
 
-            if ($action === false) throw new ZipException("Error creating folder ".$destination);
+            if ( $action === false ) throw new ZipException("Error creating folder ".$destination);
 
         }
 
-        if (!is_writable($destination)) throw new ZipException('Destination path not writable');
+        if ( !is_writable($destination) ) throw new ZipException('Destination path not writable');
 
         //$destination = substr($destination, -1) == '/' ? $destination : $destination.'/';
 
-        if (is_array($files) AND @sizeof($files) != 0) {
+        if ( is_array($files) AND @sizeof($files) != 0 ) {
 
             $file_matrix = $files;
 
-        }
-        else $file_matrix = $this->getArchiveFiles();
+        } else $file_matrix = $this->getArchiveFiles();
 
         $extract = $this->zip_archive->extractTo($destination, $file_matrix);
 
-        if ($extract === false) throw new ZipException(self::getStatus($this->zip_archive->status));
+        if ( $extract === false ) throw new ZipException(self::getStatus($this->zip_archive->status));
 
         return true;
 
@@ -446,7 +442,7 @@ class Zip {
      */
     public function add($file_name_or_array, $flatten_root_folder = false) {
 
-        if (empty($file_name_or_array)) throw new ZipException(self::getStatus(ZipArchive::ER_NOENT));
+        if ( empty($file_name_or_array) ) throw new ZipException(self::getStatus(ZipArchive::ER_NOENT));
         
         $flatten_root_folder = filter_var($flatten_root_folder, FILTER_VALIDATE_BOOLEAN, array(
             "options" => array(
@@ -456,12 +452,11 @@ class Zip {
 
         try {
 
-            if (is_array($file_name_or_array)) {
+            if ( is_array($file_name_or_array) ) {
 
-                foreach ($file_name_or_array as $file_name) $this->addItem($file_name, $flatten_root_folder);
+                foreach ( $file_name_or_array as $file_name ) $this->addItem($file_name, $flatten_root_folder);
 
-            }
-            else $this->addItem($file_name_or_array, $flatten_root_folder);
+            } else $this->addItem($file_name_or_array, $flatten_root_folder);
             
         } catch (ZipException $ze) {
             
@@ -483,16 +478,15 @@ class Zip {
      */
     public function delete($file_name_or_array) {
 
-        if (empty($file_name_or_array)) throw new ZipException(self::getStatus(ZipArchive::ER_NOENT));
+        if ( empty($file_name_or_array) ) throw new ZipException(self::getStatus(ZipArchive::ER_NOENT));
 
         try {
 
-            if (is_array($file_name_or_array)) {
+            if ( is_array($file_name_or_array) ) {
 
-                foreach ($file_name_or_array as $file_name) $this->deleteItem($file_name);
+                foreach ( $file_name_or_array as $file_name ) $this->deleteItem($file_name);
 
-            }
-            else $this->deleteItem($file_name_or_array);
+            } else $this->deleteItem($file_name_or_array);
             
         } catch (ZipException $ze) {
             
@@ -512,7 +506,7 @@ class Zip {
      */
     public function close() {
 
-        if ($this->zip_archive->close() === false) throw new ZipException(self::getStatus($this->zip_archive->status));
+        if ( $this->zip_archive->close() === false ) throw new ZipException(self::getStatus($this->zip_archive->status));
 
         return true;
 
@@ -527,17 +521,17 @@ class Zip {
 
         $list = array();
 
-        for ($i = 0; $i < $this->zip_archive->numFiles; $i++) {
+        for ( $i = 0; $i < $this->zip_archive->numFiles; $i++ ) {
 
             $file = $this->zip_archive->statIndex($i);
 
-            if ($file === false) continue;
+            if ( $file === false ) continue;
 
             $name = str_replace('\\', '/', $file['name']);
 
-            if ($name[0] == "." AND in_array($this->skip_mode, array("HIDDEN", "ALL"))) continue;
+            if ( $name[0] == "." AND in_array($this->skip_mode, array("HIDDEN", "ALL")) ) continue;
 
-            if ($name[0] == "." AND @$name[1] == "_" AND in_array($this->skip_mode, array("COMODOJO", "ALL"))) continue;         
+            if ( $name[0] == "." AND @$name[1] == "_" AND in_array($this->skip_mode, array("COMODOJO", "ALL")) ) continue;         
 
             array_push($list, $name);
 
@@ -564,23 +558,23 @@ class Zip {
 
         $real_name = basename($real_file);
 
-        if (!is_null($base)) {
+        if ( !is_null($base) ) {
 
-            if ($real_name[0] == "." AND in_array($this->skip_mode, array("HIDDEN", "ALL"))) return;
+            if ( $real_name[0] == "." AND in_array($this->skip_mode, array("HIDDEN", "ALL")) ) return;
 
-            if ($real_name[0] == "." AND @$real_name[1] == "_" AND in_array($this->skip_mode, array("COMODOJO", "ALL"))) return;
+            if ( $real_name[0] == "." AND @$real_name[1] == "_" AND in_array($this->skip_mode, array("COMODOJO", "ALL")) ) return;
 
         }
 
-        if (is_dir($real_file)) {
+        if ( is_dir($real_file) ) {
 
-            if (!$flatroot) {
+            if ( !$flatroot ) {
                 
                 $folder_target = is_null($base) ? $real_name : $base.$real_name;
             
                 $new_folder = $this->zip_archive->addEmptyDir($folder_target);
 
-                if ($new_folder === false) throw new ZipException(self::getStatus($this->zip_archive->status));
+                if ( $new_folder === false ) throw new ZipException(self::getStatus($this->zip_archive->status));
             
             } else {
                 
@@ -588,9 +582,9 @@ class Zip {
                 
             }
 
-            foreach (new \DirectoryIterator($real_file) as $path) {
+            foreach ( new \DirectoryIterator($real_file) as $path ) {
     
-                if ($path->isDot()) continue;
+                if ( $path->isDot() ) continue;
 
                 $file_real = $path->getPathname();
 
@@ -609,16 +603,15 @@ class Zip {
             }
 
         }
-        else if (is_file($real_file)) {
+        else if ( is_file($real_file) ) {
 
             $file_target = is_null($base) ? $real_name : $base.$real_name;
 
             $add_file = $this->zip_archive->addFile($real_file, $file_target);
 
-            if ($add_file === false) throw new ZipException(self::getStatus($this->zip_archive->status));
+            if ( $add_file === false ) throw new ZipException(self::getStatus($this->zip_archive->status));
 
-        }
-        else return;
+        } else return;
 
     }
     
@@ -633,7 +626,7 @@ class Zip {
 
         $deleted = $this->zip_archive->deleteName($file);
 
-        if ($deleted === false) throw new ZipException(self::getStatus($this->zip_archive->status));
+        if ( $deleted === false ) throw new ZipException(self::getStatus($this->zip_archive->status));
 
     }
 
@@ -652,7 +645,7 @@ class Zip {
 
         $open = $zip->open($zip_file, $flags);
 
-        if ($open !== true) throw new ZipException(self::getStatus($open));
+        if ( $open !== true ) throw new ZipException(self::getStatus($open));
         
         return $zip;
 
@@ -667,7 +660,7 @@ class Zip {
      */
     private static function getStatus($code) {
 
-        if (array_key_exists($code, self::$zip_status_codes)) return self::$zip_status_codes[$code];
+        if ( array_key_exists($code, self::$zip_status_codes) ) return self::$zip_status_codes[$code];
 
         else return sprintf('Unknown status %s', $code);
 

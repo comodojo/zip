@@ -75,7 +75,7 @@ class ZipManager {
         
         $list = array();
         
-        foreach ($this->zip_archives as $key=>$archive) $list[$key] = $archive->getZipFile();
+        foreach ( $this->zip_archives as $key=>$archive ) $list[$key] = $archive->getZipFile();
         
         return $list;
         
@@ -91,7 +91,7 @@ class ZipManager {
      */
     public function getZip($zipId) {
         
-        if ( array_key_exists($zipId, $this->zip_archives) === false) throw new ZipException("Archive not found");
+        if ( array_key_exists($zipId, $this->zip_archives) === false ) throw new ZipException("Archive not found");
         
         return $this->zip_archives[$zipId];
         
@@ -110,7 +110,7 @@ class ZipManager {
         
         try {
             
-            foreach ($this->zip_archives as $archive) $archive->setPath($path);
+            foreach ( $this->zip_archives as $archive ) $archive->setPath($path);
             
         } catch (ZipException $ze) {
             
@@ -131,7 +131,7 @@ class ZipManager {
         
         $paths = array();
         
-        foreach ($this->zip_archives as $key=>$archive) $paths[$key] = $archive->getPath();
+        foreach ( $this->zip_archives as $key=>$archive ) $paths[$key] = $archive->getPath();
         
         return $paths;
         
@@ -149,7 +149,7 @@ class ZipManager {
         
         try {
             
-            foreach ($this->zip_archives as $archive) $archive->setMask($mask);
+            foreach ( $this->zip_archives as $archive ) $archive->setMask($mask);
             
         } catch (ZipException $ze) {
             
@@ -170,7 +170,7 @@ class ZipManager {
         
         $masks = array();
         
-        foreach ($this->zip_archives as $key=>$archive) $masks[$key] = $archive->getMask();
+        foreach ( $this->zip_archives as $key=>$archive ) $masks[$key] = $archive->getMask();
         
         return $masks;
         
@@ -188,7 +188,7 @@ class ZipManager {
         
         try {
         
-            foreach ($this->zip_archives as $key=>$archive) $files[$key] = $archive->listFiles();
+            foreach ( $this->zip_archives as $key=>$archive ) $files[$key] = $archive->listFiles();
             
         } catch (ZipException $ze) {
             
@@ -210,19 +210,19 @@ class ZipManager {
      * @return  bool
      * @throws  \Comodojo\Exception\ZipException
      */
-    public function extract($destination, $separate=true, $files=null) {
+    public function extract($destination, $separate = true, $files = null) {
         
         try {
         
-            foreach ($this->zip_archives as $archive) {
+            foreach ( $this->zip_archives as $archive ) {
             
                 $local_path = substr($destination, -1) == '/' ? $destination : $destination.'/';
                 
                 $local_file = pathinfo($archive->getZipFile());
             
-                $local_destination = $separate ? ( $local_path . $local_file['filename'] ) : $destination;
+                $local_destination = $separate ? ($local_path.$local_file['filename']) : $destination;
                
-                $archive->extract($local_destination, $files=null);
+                $archive->extract($local_destination, $files = null);
                 
             }
             
@@ -245,11 +245,11 @@ class ZipManager {
      * @return  bool
      * @throws  \Comodojo\Exception\ZipException
      */
-    public function merge($output_zip_file, $separate=true) {
+    public function merge($output_zip_file, $separate = true) {
         
         $pathinfo = pathinfo($output_zip_file);
         
-        $temporary_folder = $pathinfo['dirname'] . "/" . self::getTemporaryFolder();
+        $temporary_folder = $pathinfo['dirname']."/".self::getTemporaryFolder();
         
         try {
         
@@ -284,11 +284,11 @@ class ZipManager {
      * @return  \Comodojo\Zip\ZipManager
      * @throws  \Comodojo\Exception\ZipException
      */
-    public function add($file_name_or_array, $flatten_root_folder=false) {
+    public function add($file_name_or_array, $flatten_root_folder = false) {
         
         try {
         
-            foreach ($this->zip_archives as $archive) $archive->add($file_name_or_array, $flatten_root_folder);
+            foreach ( $this->zip_archives as $archive ) $archive->add($file_name_or_array, $flatten_root_folder);
             
         } catch (ZipException $ze) {
             
@@ -312,7 +312,7 @@ class ZipManager {
         
         try {
         
-            foreach ($this->zip_archives as $archive) $archive->delete($file_name_or_array);
+            foreach ( $this->zip_archives as $archive ) $archive->delete($file_name_or_array);
             
         } catch (ZipException $ze) {
             
@@ -334,7 +334,7 @@ class ZipManager {
         
         try {
         
-            foreach ($this->zip_archives as $archive) $archive->close();
+            foreach ( $this->zip_archives as $archive ) $archive->close();
             
         } catch (ZipException $ze) {
             
@@ -356,7 +356,7 @@ class ZipManager {
     
     private static function getTemporaryFolder() {
         
-        return "zip-temp-folder-" . md5(uniqid(rand(), true), 0);
+        return "zip-temp-folder-".md5(uniqid(rand(), true), 0);
         
     }
     
@@ -365,7 +365,7 @@ class ZipManager {
      */
     private static function recursiveUnlink($folder) {
 
-        foreach(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($folder, \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST) as $path) {
+        foreach ( new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($folder, \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST) as $path ) {
             
             $pathname = $path->getPathname();
 
@@ -373,8 +373,7 @@ class ZipManager {
 
                 $action = rmdir($pathname);
 
-            } 
-            else {
+            } else {
 
                 $action = unlink($pathname);
 
