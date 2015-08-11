@@ -28,7 +28,7 @@ class Zip {
     /**
      * Select files to skip
      *
-     * @var bool
+     * @var string
      */
     private $skip_mode = "NONE";
 
@@ -56,7 +56,7 @@ class Zip {
     /**
      * zip file name
      *
-     * @var sting
+     * @var string
      */
     private $zip_file = null;
 
@@ -79,7 +79,7 @@ class Zip {
      *
      * @var array
      */
-    static private $zip_status_codes = Array(
+    private static $zip_status_codes = Array(
         ZipArchive::ER_OK           => 'No error',
         ZipArchive::ER_MULTIDISK    => 'Multi-disk zip archives not supported',
         ZipArchive::ER_RENAME       => 'Renaming temporary file failed',
@@ -111,7 +111,6 @@ class Zip {
      *
      * @param   string  $zip_file   ZIP file name
      *
-     * @return  \Comodojo\Zip\Zip
      * @throws  \Comodojo\Exception\ZipException
      */
     public function __construct($zip_file) {
@@ -130,7 +129,7 @@ class Zip {
      * @return  \Comodojo\Zip\Zip
      * @throws  \Comodojo\Exception\ZipException
      */
-    static public function open($zip_file) {
+    public static function open($zip_file) {
 
         try {
 
@@ -157,7 +156,7 @@ class Zip {
      * @return  bool
      * @throws  \Comodojo\Exception\ZipException
      */
-    static public function check($zip_file) {
+    public static function check($zip_file) {
 
         try {
 
@@ -185,7 +184,7 @@ class Zip {
      * @return  \Comodojo\Zip\Zip
      * @throws  \Comodojo\Exception\ZipException
      */
-    static public function create($zip_file, $overwrite=false) {
+    public static function create($zip_file, $overwrite=false) {
 
         $overwrite = filter_var($overwrite, FILTER_VALIDATE_BOOLEAN, array(
             "options" => array(
@@ -220,7 +219,7 @@ class Zip {
      * @return  \Comodojo\Zip\Zip
      * @throws  \Comodojo\Exception\ZipException
      */
-    public final function setSkipped($mode) {
+    final public function setSkipped($mode) {
 
         $mode = strtoupper($mode);
 
@@ -237,7 +236,7 @@ class Zip {
      *
      * @return  string
      */
-    public final function getSkipped() {
+    final public function getSkipped() {
 
         return $this->skip_mode;
 
@@ -250,7 +249,7 @@ class Zip {
      *
      * @return  \Comodojo\Zip\Zip
      */
-    public final function setPassword($password) {
+    final public function setPassword($password) {
 
         $this->password = $password;
 
@@ -263,7 +262,7 @@ class Zip {
      *
      * @return  string
      */
-    public final function getPassword() {
+    final public function getPassword() {
 
         return $this->password;
 
@@ -277,7 +276,7 @@ class Zip {
      * @return  \Comodojo\Zip\Zip
      * @throws  \Comodojo\Exception\ZipException
      */
-    public final function setPath($path) {
+    final public function setPath($path) {
 
         if ( !file_exists($path) ) throw new ZipException("Not existent path");
 
@@ -292,7 +291,7 @@ class Zip {
      *
      * @return  string
      */
-    public final function getPath() {
+    final public function getPath() {
 
         return $this->path;
 
@@ -305,7 +304,7 @@ class Zip {
      *
      * @return  \Comodojo\Zip\Zip
      */
-    public final function setMask($mask) {
+    final public function setMask($mask) {
 
         $mask = filter_var($mask, FILTER_VALIDATE_INT, array(
             "options" => array(
@@ -325,7 +324,7 @@ class Zip {
      *
      * @return  int
      */
-    public final function getMask() {
+    final public function getMask() {
 
         return $this->mask;
 
@@ -338,7 +337,7 @@ class Zip {
      *
      * @return  \Comodojo\Zip\Zip
      */
-    public final function setArchive(ZipArchive $zip) {
+    final public function setArchive(ZipArchive $zip) {
 
         $this->zip_archive = $zip;
 
@@ -351,7 +350,7 @@ class Zip {
      *
      * @return  \ZipArchive
      */
-    public final function getArchive() {
+    final public function getArchive() {
 
         return $this->zip_archive;
 
@@ -362,7 +361,7 @@ class Zip {
      *
      * @return  string
      */
-    public final function getZipFile() {
+    final public function getZipFile() {
 
         return $this->zip_file;
 
@@ -442,7 +441,7 @@ class Zip {
      * @param   mixed   $file_name_or_array     filename to add or an array of filenames
      * @param   bool    $flatten_root_folder    in case of directory, specify if root folder should be flatten or not
      *
-     * @return  \ZipArchive
+     * @return  \Comodojo\Zip\Zip
      * @throws  \Comodojo\Exception\ZipException
      */
     public function add($file_name_or_array, $flatten_root_folder=false) {
@@ -479,7 +478,7 @@ class Zip {
      *
      * @param   mixed   $file_name_or_array     filename to delete or an array of filenames
      *
-     * @return  \ZipArchive
+     * @return  \Comodojo\Zip\Zip
      * @throws  \Comodojo\Exception\ZipException
      */
     public function delete($file_name_or_array) {
@@ -522,11 +521,11 @@ class Zip {
     /**
      * Get a list of file contained in zip archive before extraction
      *
-     * @return  Object  ZipArchive
+     * @return  array
      */
     private function getArchiveFiles() {
 
-        $list = Array();
+        $list = array();
 
         for ($i = 0; $i < $this->zip_archive->numFiles; $i++) {
 
@@ -551,8 +550,9 @@ class Zip {
     /**
      * Add item to zip archive
      *
-     * @param   int $file   File to add (realpath)
-     * @param   int $base   (optional) Base to record in zip file
+     * @param   string $file       File to add (realpath)
+     * @param   bool   $flatroot   (optional) If true, source directory will be not included
+     * @param   string $base       (optional) Base to record in zip file
      * 
      * @throws  \Comodojo\Exception\ZipException
      */
@@ -625,7 +625,7 @@ class Zip {
     /**
      * Delete item from zip archive
      *
-     * @param   int $file   File to delete (zippath)
+     * @param   string $file   File to delete (zippath)
      * 
      * @throws  \Comodojo\Exception\ZipException
      */
@@ -640,13 +640,13 @@ class Zip {
     /**
      * Open a zip file
      *
-     * @param   int $code   ZIP status code
-     * @param   int $code   ZIP status code
+     * @param   string $zip_file   ZIP status code
+     * @param   int    $flags      ZIP status code
      *
-     * @return  Object  \ZipArchive
+     * @return  \ZipArchive
      * @throws  \Comodojo\Exception\ZipException
      */
-    static private function openZipFile($zip_file, $flags=null) {
+    private static function openZipFile($zip_file, $flags=null) {
 
         $zip = new ZipArchive();
 
@@ -665,7 +665,7 @@ class Zip {
      *
      * @return  string
      */
-    static private function getStatus($code) {
+    private static function getStatus($code) {
 
         if ( array_key_exists($code, self::$zip_status_codes) ) return self::$zip_status_codes[$code];
 

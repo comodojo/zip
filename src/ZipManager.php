@@ -140,7 +140,7 @@ class ZipManager {
     /**
      * Set default file mask for all Zips
      *
-     * @param   string  $path
+     * @param   int  $mask
      *
      * @return  \Comodojo\Zip\ZipManager
      * @throws  \Comodojo\Exception\ZipException
@@ -346,7 +346,7 @@ class ZipManager {
         
     }
     
-    static private function removeExtension($filename) {
+    private static function removeExtension($filename) {
         
         $file_info = pathinfo($filename);
 
@@ -354,7 +354,7 @@ class ZipManager {
 
     }
     
-    static private function getTemporaryFolder() {
+    private static function getTemporaryFolder() {
         
         return "zip-temp-folder-" . md5(uniqid(rand(), true), 0);
         

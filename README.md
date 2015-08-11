@@ -1,6 +1,6 @@
 # comodojo/zip
 
-[![Build Status](https://api.travis-ci.org/comodojo/zip.png)](http://travis-ci.org/comodojo/zip) [![Latest Stable Version](https://poser.pugx.org/comodojo/zip/v/stable)](https://packagist.org/packages/comodojo/zip) [![Total Downloads](https://poser.pugx.org/comodojo/zip/downloads)](https://packagist.org/packages/comodojo/zip) [![Latest Unstable Version](https://poser.pugx.org/comodojo/zip/v/unstable)](https://packagist.org/packages/comodojo/zip) [![License](https://poser.pugx.org/comodojo/zip/license)](https://packagist.org/packages/comodojo/zip)
+[![Build Status](https://api.travis-ci.org/comodojo/zip.png)](http://travis-ci.org/comodojo/zip) [![Latest Stable Version](https://poser.pugx.org/comodojo/zip/v/stable)](https://packagist.org/packages/comodojo/zip) [![Total Downloads](https://poser.pugx.org/comodojo/zip/downloads)](https://packagist.org/packages/comodojo/zip) [![Latest Unstable Version](https://poser.pugx.org/comodojo/zip/v/unstable)](https://packagist.org/packages/comodojo/zip) [![License](https://poser.pugx.org/comodojo/zip/license)](https://packagist.org/packages/comodojo/zip) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/comodojo/zip/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/comodojo/zip/?branch=master) [![Code Coverage](https://scrutinizer-ci.com/g/comodojo/zip/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/comodojo/zip/?branch=master)
 
 ZipArchive toolbox
 
@@ -10,15 +10,9 @@ From version 2.0.0, it supports multiple Zip files (extract, add file, remove fi
 
 ## Installation
 
-- Using Composer
+Install [composer](https://getcomposer.org/), then:
 
-    Install [composer](https://getcomposer.org/), then:
-
-    `` composer require comodojo/zip 2.0.* ``
-
--   Manually
-
-    Download zipball from GitHub, extract it, include `src/Zip.php`, `src/ZipManager.php` and `src/Exception/ZipException.php` in your project.
+`` composer require comodojo/zip 2.0.* ``
 
 ## Zip usage
 

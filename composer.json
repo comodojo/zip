@@ -22,11 +22,14 @@
     },
     "autoload": {
         "psr-4": {
-             "Comodojo\\Exception\\": "src/Exception",
              "Comodojo\\Zip\\": "src"
          }
     },
+    "require": {
+        "comodojo/exceptions": "@stable"
+    },
     "require-dev": {
-        "phpunit/phpunit": "~4.0"
+        "phpunit/phpunit": "~4.0",
+        "scrutinizer/ocular": "~1.1"
     }
 }

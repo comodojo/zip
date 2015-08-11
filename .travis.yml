@@ -12,4 +12,7 @@ php:
 before_script:
   - composer install --prefer-source
 
-script: ./vendor/bin/phpunit --coverage-text
+script: ./vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover
+
+after_script:
+  - bash -c 'if [[ "$TRAVIS_PHP_VERSION" != "hhvm" && "$TRAVIS_PHP_VERSION" != 7* ]]; then php vendor/bin/ocular code-coverage:upload --format=php-clover coverage.clover; fi;'

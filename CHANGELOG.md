@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+2.0.1
+-----
+
+* added comodojo/exceptions as a dependency
+
 2.0.0
 -----
 
