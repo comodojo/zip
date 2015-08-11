@@ -360,6 +360,9 @@ class ZipManager {
         
     }
     
+    /**
+     * @param string $folder
+     */
     private static function recursiveUnlink($folder) {
 
         foreach(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($folder, \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST) as $path) {
