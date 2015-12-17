@@ -12,7 +12,7 @@ From version 2.0.0, it supports multiple Zip files (extract, add file, remove fi
 
 Install [composer](https://getcomposer.org/), then:
 
-`` composer require comodojo/zip 2.0.* ``
+`` composer require comodojo/zip ``
 
 ## Zip usage
 
@@ -26,14 +26,14 @@ The `\Comodojo\Zip\Zip` class is made to handle a single zip file.
     $zip = \Comodojo\Zip\Zip::open('file.zip');
 
     ```
-    
+
 - Create zip file:
 
     ```php    
     $zip = \Comodojo\Zip\Zip::create('file.zip');
 
     ```
-    
+
 - Check zip file:
 
     ```php    
@@ -46,10 +46,10 @@ The `\Comodojo\Zip\Zip` class is made to handle a single zip file.
     ```php    
     // extract whole archive
     $zip->extract('/path/to/uncompressed/files');
-    
+
     // extract a file
     $zip->extract('/path/to/uncompressed/files', 'file');
-    
+
     // extract multiple files
     $zip->extract('/path/to/uncompressed/files', array('file1','file2'));
 
@@ -59,16 +59,16 @@ The `\Comodojo\Zip\Zip` class is made to handle a single zip file.
 
     ```php    
     $zip->add('/path/to/my/file');
-    
+
     // declaring path
     $zip->setPath('/path/to/my')->add('file');
-    
+
     // add directory
     $zip->add('/path/to/my/directory');
-    
+
     // add directory (only its content)
     $zip->add('/path/to/my/directory', true);
-    
+
     ```
 
 - Add multiple files/directories to zip:
@@ -76,40 +76,40 @@ The `\Comodojo\Zip\Zip` class is made to handle a single zip file.
     ```php    
     // using array as parameter
     $zip->add( array('/path/to/my/file1', '/path/to/my/file2');
-    
+
     // chaining methods
     $zip->add('/path/to/my/file1')->add('/path/to/my/file2');
-    
+
     // declaring path
     $zip->setPath('/path/to/my')->add('file1')->add('file2');
 
     ```
-    
+
 - Delete a file/directory from zip:
 
     ```php    
     $zip->delete('file');
 
     ```
-    
+
 - Delete multiple files/directories from zip:
 
     ```php    
     // using array as parameter
     $zip->delete( array('file1', 'file2') );
-    
+
     // chaining methods
     $zip->delete('file1')->delete('file2');
 
     ```
-    
+
 - List content of zip file
 
     ```php    
     $zip->listFiles();
 
     ```
-    
+
 - Close zip file
 
     ```php    
@@ -124,32 +124,21 @@ The `\Comodojo\Zip\Zip` class is made to handle a single zip file.
     ```php    
     // set mode
     $zip->setSkipped('HIDDEN');
-    
-    // get mode
-    $mode = $zip->getSkipped(); 
-    
-    ```
-    
-- Use password for zip extraction:
 
-    ```php    
-    // set password
-    $zip->setPassword('slartibartfast');
-    
-    // get password
-    $password = $zip->getPassword();
-    
+    // get mode
+    $mode = $zip->getSkipped();
+
     ```
-    
+
 - Use a mask != 0777 for created folders:
 
     ```php    
     // set mask
     $zip->setMask(0644);
-    
+
     // get mask
     $mask = $zip->getMask();
-    
+
     ```
 
 ## ZipManager usage
@@ -163,42 +152,42 @@ The `\Comodojo\Zip\ZipManager` can handle multiple `\Comodojo\Zip\Zip` objects.
     ```php    
     // init manager
     $manager = new \Comodojo\Zip\ZipManager();
-    
+
     // register existing zips
     $manager->addZip( \Comodojo\Zip\Zip::open('/path/to/my/file1.zip') )
             ->addZip( \Comodojo\Zip\Zip::open('/path/to/my/file2.zip') );
-            
+
     // register a new zip
     $manager->addZip( \Comodojo\Zip\Zip::create('/path/to/my/file3.zip') );
-    
+
     ```
-    
+
 - Basic zips management:
 
     ```php    
     // get a list of registered zips
     $list = $manager->listZips();
-    
+
     // remove a zip
     $manager->removeZip($ZipObject);
-            
+
     // get a Zip
     $zip = $manager->getZip(0);
-    
+
     ```
 
 - Add files to all zips:
 
     ```php    
     $manager-> = new \Comodojo\Zip\ZipManager();
-    
+
     // register existing zips
     $manager->addZip( \Comodojo\Zip\Zip::open('/path/to/my/file1.zip') )
             ->addZip( \Comodojo\Zip\Zip::open('/path/to/my/file2.zip') );
-            
+
     // register a new zip
     $manager->addZip( \Comodojo\Zip\Zip::create('/path/to/my/file3.zip') );
-    
+
     ```
 
 - Extract zips:
@@ -206,16 +195,16 @@ The `\Comodojo\Zip\ZipManager` can handle multiple `\Comodojo\Zip\Zip` objects.
     ```php    
     // separate content in folders
     $extract = $manager->extract('/path/to/uncompressed/files', true);
-    
+
     // use a single folder
     $extract = $manager->extract('/path/to/uncompressed/files', false);
-    
+
     // extract single file
     $extract = $manager->extract('/path/to/uncompressed/files', false, 'file');
-    
+
     // extract multiple files
     $extract = $manager->extract('/path/to/uncompressed/files', false, array('file1','file2'));
-    
+
     ```
 
 - Merge zips:
@@ -223,19 +212,19 @@ The `\Comodojo\Zip\ZipManager` can handle multiple `\Comodojo\Zip\Zip` objects.
     ```php    
     // separate content in folders
     $manager->merge('/path/to/output/file.zip', true);
-    
+
     // flatten files
     $manager->merge('/path/to/output/file.zip', false);
-    
+
     ```
 
 - Close zips:
 
     ```php    
     $manager->close();
-    
+
     ```
-    
+
 ### Additional methods
 
 - Declare path from which add files:
@@ -243,10 +232,10 @@ The `\Comodojo\Zip\ZipManager` can handle multiple `\Comodojo\Zip\Zip` objects.
     ```php    
     // set path
     $zip->setPath('/path/to/files');
-    
+
     // get path
-    $path = $zip->getPath(); 
-    
+    $path = $zip->getPath();
+
     ```
 
 - Use a mask != 0777 for created folders
@@ -254,10 +243,10 @@ The `\Comodojo\Zip\ZipManager` can handle multiple `\Comodojo\Zip\Zip` objects.
     ```php    
     // set masks
     $manager->setMask(0644);
-    
+
     // get masks
     $mask = $manager->getMask();
-    
+
     ```
 
 ## Documentation

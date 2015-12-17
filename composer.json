@@ -26,6 +26,7 @@
          }
     },
     "require": {
+        "php": ">=5.2.0",
         "comodojo/exceptions": "@stable"
     },
     "require-dev": {

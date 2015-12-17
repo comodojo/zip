@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+2.0.2
+-----
+
+* removed setPassword/getPassword methods (#3), will be reintroduced in 2.1.
+
 2.0.1
 -----
 
