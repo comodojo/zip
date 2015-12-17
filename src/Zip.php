@@ -5,15 +5,15 @@ use \Comodojo\Exception\ZipException;
 
 /**
  * comodojo/zip - ZipArchive toolbox
- * 
+ *
  * This class provide methods to handle single zip archive
- * 
+ *
  * @package     Comodojo Spare Parts
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
  *
  * LICENSE:
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -24,7 +24,7 @@ use \Comodojo\Exception\ZipException;
  */
 
 class Zip {
-    
+
     /**
      * Select files to skip
      *
@@ -125,7 +125,7 @@ class Zip {
      * Open a zip archive
      *
      * @param   string  $zip_file   ZIP file name
-     * 
+     *
      * @return  \Comodojo\Zip\Zip
      * @throws  \Comodojo\Exception\ZipException
      */
@@ -134,7 +134,7 @@ class Zip {
         try {
 
             $zip = new Zip($zip_file);
-            
+
             $zip->setArchive(self::openZipFile($zip_file));
 
         } catch (ZipException $ze) {
@@ -193,9 +193,9 @@ class Zip {
         try {
 
             $zip = new Zip($zip_file);
-            
+
             if ( $overwrite ) $zip->setArchive(self::openZipFile($zip_file, ZipArchive::CREATE | ZipArchive::OVERWRITE));
-            
+
             else $zip->setArchive(self::openZipFile($zip_file, ZipArchive::CREATE));
 
         } catch (ZipException $ze) {
@@ -221,7 +221,7 @@ class Zip {
         $mode = strtoupper($mode);
 
         if ( !in_array($mode, $this->supported_skip_modes) ) throw new ZipException("Unsupported skip mode");
-        
+
         $this->skip_mode = $mode;
 
         return $this;
@@ -292,7 +292,7 @@ class Zip {
 
         return $this->path;
 
-    } 
+    }
 
     /**
      * Set extraction folder mask
@@ -306,10 +306,10 @@ class Zip {
         $mask = filter_var($mask, FILTER_VALIDATE_INT, array(
             "options" => array(
                 "max_range" => 0777,
-                "default" => 0777 
+                "default" => 0777
             ), 'flags' => FILTER_FLAG_ALLOW_OCTAL
         ));
-        
+
         $this->mask = $mask;
 
         return $this;
@@ -352,7 +352,7 @@ class Zip {
         return $this->zip_archive;
 
     }
-    
+
     /**
      * Get current zip file
      *
@@ -406,7 +406,7 @@ class Zip {
             $omask = umask(0);
 
             $action = mkdir($destination, $this->mask, true);
-            
+
             umask($omask);
 
             if ( $action === false ) throw new ZipException("Error creating folder ".$destination);
@@ -415,13 +415,17 @@ class Zip {
 
         if ( !is_writable($destination) ) throw new ZipException('Destination path not writable');
 
-        //$destination = substr($destination, -1) == '/' ? $destination : $destination.'/';
-
-        if ( is_array($files) AND @sizeof($files) != 0 ) {
+        if ( is_array($files) && @sizeof($files) != 0 ) {
 
             $file_matrix = $files;
 
-        } else $file_matrix = $this->getArchiveFiles();
+        } else {
+
+            $file_matrix = $this->getArchiveFiles();
+
+        }
+
+        if ( !empty($this->password) ) $this->zip_archive->setPassword($this->password);
 
         $extract = $this->zip_archive->extractTo($destination, $file_matrix);
 
@@ -443,7 +447,7 @@ class Zip {
     public function add($file_name_or_array, $flatten_root_folder = false) {
 
         if ( empty($file_name_or_array) ) throw new ZipException(self::getStatus(ZipArchive::ER_NOENT));
-        
+
         $flatten_root_folder = filter_var($flatten_root_folder, FILTER_VALIDATE_BOOLEAN, array(
             "options" => array(
                 "default" => false
@@ -457,9 +461,9 @@ class Zip {
                 foreach ( $file_name_or_array as $file_name ) $this->addItem($file_name, $flatten_root_folder);
 
             } else $this->addItem($file_name_or_array, $flatten_root_folder);
-            
+
         } catch (ZipException $ze) {
-            
+
             throw $ze;
 
         }
@@ -487,9 +491,9 @@ class Zip {
                 foreach ( $file_name_or_array as $file_name ) $this->deleteItem($file_name);
 
             } else $this->deleteItem($file_name_or_array);
-            
+
         } catch (ZipException $ze) {
-            
+
             throw $ze;
 
         }
@@ -531,7 +535,7 @@ class Zip {
 
             if ( $name[0] == "." AND in_array($this->skip_mode, array("HIDDEN", "ALL")) ) continue;
 
-            if ( $name[0] == "." AND @$name[1] == "_" AND in_array($this->skip_mode, array("COMODOJO", "ALL")) ) continue;         
+            if ( $name[0] == "." AND @$name[1] == "_" AND in_array($this->skip_mode, array("COMODOJO", "ALL")) ) continue;
 
             array_push($list, $name);
 
@@ -547,7 +551,7 @@ class Zip {
      * @param   string $file       File to add (realpath)
      * @param   bool   $flatroot   (optional) If true, source directory will be not included
      * @param   string $base       (optional) Base to record in zip file
-     * 
+     *
      * @throws  \Comodojo\Exception\ZipException
      */
     private function addItem($file, $flatroot = false, $base = null) {
@@ -569,21 +573,21 @@ class Zip {
         if ( is_dir($real_file) ) {
 
             if ( !$flatroot ) {
-                
+
                 $folder_target = is_null($base) ? $real_name : $base.$real_name;
-            
+
                 $new_folder = $this->zip_archive->addEmptyDir($folder_target);
 
                 if ( $new_folder === false ) throw new ZipException(self::getStatus($this->zip_archive->status));
-            
+
             } else {
-                
+
                 $folder_target = null;
-                
+
             }
 
             foreach ( new \DirectoryIterator($real_file) as $path ) {
-    
+
                 if ( $path->isDot() ) continue;
 
                 $file_real = $path->getPathname();
@@ -591,11 +595,11 @@ class Zip {
                 $base = is_null($folder_target) ? null : ($folder_target."/");
 
                 try {
-                    
+
                     $this->addItem($file_real, false, $base);
 
                 } catch (ZipException $ze) {
-                    
+
                     throw $ze;
 
                 }
@@ -614,12 +618,12 @@ class Zip {
         } else return;
 
     }
-    
+
     /**
      * Delete item from zip archive
      *
      * @param   string $file   File to delete (zippath)
-     * 
+     *
      * @throws  \Comodojo\Exception\ZipException
      */
     private function deleteItem($file) {
@@ -646,7 +650,7 @@ class Zip {
         $open = $zip->open($zip_file, $flags);
 
         if ( $open !== true ) throw new ZipException(self::getStatus($open));
-        
+
         return $zip;
 
     }
