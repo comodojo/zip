@@ -1,6 +1,19 @@
 CHANGELOG
 =========
 
+2.1.0
+-----
+
+This release offers the same functionalities of 2.0.* plus support for password-protected zips (see #3); it require PHP 5.6.
+
+* setPassword/getPassword methods are back and working
+* min PHP version >= 5.6.0
+
+2.0.2
+-----
+
+* removed setPassword/getPassword methods (#3), will be reintroduced in 2.1.
+
 2.0.1
 -----
 
