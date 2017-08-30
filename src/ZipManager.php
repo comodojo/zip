@@ -222,7 +222,7 @@ class ZipManager {
 
                 $local_destination = $separate ? ($local_path.$local_file['filename']) : $destination;
 
-                $archive->extract($local_destination, $files = null);
+                $archive->extract($local_destination, $files);
 
             }
 
