@@ -2,13 +2,11 @@ language: php
 
 php:
   - 7.1
-  - hhvm
   - nightly
 
 matrix:
   fast_finish: true
   allow_failures:
-      - php: hhvm
       - php: nightly
 
 before_script:
@@ -17,4 +15,4 @@ before_script:
 script: ./vendor/bin/phpunit
 
 after_script:
-  - php vendor/bin/ocular code-coverage:upload --format=php-clover build/logs/clover.xml; fi;'
+    - php vendor/bin/ocular code-coverage:upload --format=php-clover build/logs/clover.xml
