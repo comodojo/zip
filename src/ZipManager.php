@@ -35,7 +35,7 @@ class ZipManager {
      * Add a \Coodojo\Zip\Zip object to manager
      *
      * @param   \Comodojo\Zip\Zip  $zip
-     * 
+     *
      * @return  \Comodojo\Zip\ZipManager
      */
     public function addZip(\Comodojo\Zip\Zip $zip) {
@@ -222,7 +222,7 @@ class ZipManager {
 
                 $local_destination = $separate ? ($local_path.$local_file['filename']) : $destination;
 
-                $archive->extract($local_destination, $files = null);
+                $archive->extract($local_destination, $files);
 
             }
 

@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+2.0.3
+-----
+
+* fix ZipManager::extract error when providing a list of files to extract
+
 2.0.2
 -----
 
