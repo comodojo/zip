@@ -12,12 +12,12 @@
     stopOnFailure="false">
     <testsuites>
         <testsuite name="Comodojo Test Suite - zip">
-            <directory>tests/Zip/</directory>
+            <directory>tests/Comodojo/Zip/</directory>
         </testsuite>
     </testsuites>
     <filter>
         <whitelist>
-            <directory suffix=".php">src/</directory>
+            <directory suffix=".php">src/Comodojo/Zip</directory>
         </whitelist>
     </filter>
     <logging>

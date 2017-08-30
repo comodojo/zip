@@ -1,9 +1,9 @@
-<?php
+<?php namespace Comodojo\Zip\Tests;
 
 use \Comodojo\Zip\Zip;
 use \Comodojo\Zip\ZipManager;
 
-class ZipManagerTest extends \PHPUnit_Framework_TestCase {
+class ZipManagerTest extends AbstractTestCase {
 
     public function testConstruct() {
 
@@ -15,11 +15,13 @@ class ZipManagerTest extends \PHPUnit_Framework_TestCase {
 
     public function testArchiveManagement() {
 
+        $name_1 = $this->tmp('test_manager_1.zip');
+        $name_2 = $this->tmp('test_manager_2.zip');
+
         $manager = new ZipManager();
 
-        $zip_1 = Zip::create(__DIR__.'/../tmp/test_manager_1.zip');
-
-        $zip_2 = Zip::create(__DIR__.'/../tmp/test_manager_2.zip');
+        $zip_1 = Zip::create($name_1);
+        $zip_2 = Zip::create($name_2);
 
         $addZip = $manager->addZip($zip_1)->addZip($zip_2);
 
@@ -53,13 +55,20 @@ class ZipManagerTest extends \PHPUnit_Framework_TestCase {
 
     public function testCreateArchives() {
 
+        $name_3 = $this->tmp('test_manager_3.zip');
+        $name_4 = $this->tmp('test_manager_4.zip');
+
+        $lorem = $this->resource('lorem.txt');
+
         $manager = new ZipManager();
 
-        $addZip = $manager->addZip(Zip::create(__DIR__.'/../tmp/test_manager_3.zip'))->addZip(Zip::create(__DIR__.'/../tmp/test_manager_4.zip'));
+        $addZip = $manager
+            ->addZip(Zip::create($name_3))
+            ->addZip(Zip::create($name_4));
 
         $this->assertInstanceOf('\Comodojo\Zip\ZipManager', $manager);
 
-        $addFile = $manager->add(__DIR__.'/../resources/lorem.txt');
+        $addFile = $manager->add($lorem);
 
         $this->assertInstanceOf('\Comodojo\Zip\ZipManager', $addFile);
 
@@ -71,13 +80,20 @@ class ZipManagerTest extends \PHPUnit_Framework_TestCase {
 
     public function testExtractArchives() {
 
+        $name_3 = $this->tmp('test_manager_3.zip');
+        $name_4 = $this->tmp('test_manager_4.zip');
+
+        $dest = $this->tmp('test_manager_34_extract_1');
+
         $manager = new ZipManager();
 
-        $addZip = $manager->addZip(Zip::open(__DIR__.'/../tmp/test_manager_3.zip'))->addZip(Zip::open(__DIR__.'/../tmp/test_manager_4.zip'));
+        $addZip = $manager
+            ->addZip(Zip::open($name_3))
+            ->addZip(Zip::open($name_4));
 
         $this->assertInstanceOf('\Comodojo\Zip\ZipManager', $manager);
 
-        $extract = $manager->extract(__DIR__.'/../tmp/test_manager_34_extract_1');
+        $extract = $manager->extract($dest);
 
         $this->assertTrue($extract);
 
@@ -89,19 +105,29 @@ class ZipManagerTest extends \PHPUnit_Framework_TestCase {
 
     public function testMergeZipArchives() {
 
-        $zip_1 = Zip::create(__DIR__.'/../tmp/test_manager_5.zip');
+        $name_5 = $this->tmp('test_manager_5.zip');
+        $name_6 = $this->tmp('test_manager_6.zip');
 
-        $zip_1->add(__DIR__.'/../resources/lorem.txt')->close();
+        $mergefile = $this->tmp('test_manager_merge.zip');
 
-        $zip_2 = Zip::create(__DIR__.'/../tmp/test_manager_6.zip');
+        $lorem = $this->resource('lorem.txt');
+        $kc = $this->resource('keepcalm.png');
 
-        $zip_2->add(__DIR__.'/../resources/keepcalm.png')->close();
+        $zip_1 = Zip::create($name_5);
+
+        $zip_1->add($lorem)->close();
+
+        $zip_2 = Zip::create($name_6);
+
+        $zip_2->add($kc)->close();
 
         $manager = new ZipManager();
 
-        $addZip = $manager->addZip(Zip::open(__DIR__.'/../tmp/test_manager_5.zip'))->addZip(Zip::open(__DIR__.'/../tmp/test_manager_6.zip'));
+        $addZip = $manager
+            ->addZip(Zip::open($name_5))
+            ->addZip(Zip::open($name_6));
 
-        $merge = $manager->merge(__DIR__.'/../tmp/test_manager_merge.zip');
+        $merge = $manager->merge($mergefile);
 
         $this->assertTrue($merge);
 

@@ -1,0 +1,29 @@
+<?php namespace Comodojo\Zip\Tests;
+
+use \Comodojo\Zip\StatusCodes;
+use \PHPUnit\Framework\TestCase;
+use \ZipArchive;
+
+class StatusCodesTest extends TestCase {
+
+    public function testKnownReturnCode() {
+
+        $code = ZipArchive::ER_OK;
+
+        $desc = StatusCodes::get($code);
+
+        $this->assertEquals('No error', $desc);
+
+    }
+
+    public function testUnknownReturnCode() {
+
+        $code = 42;
+
+        $desc = StatusCodes::get($code);
+
+        $this->assertStringStartsWith('Unknown status', $desc);
+
+    }
+
+}

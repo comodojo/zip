@@ -8,6 +8,11 @@ This library was written to simplify and automate Zip files management using [PH
 
 From version 2.0.0, it supports multiple Zip files (extract, add file, remove file, merge, ...) via `\Comodojo\Zip\ZipManager` class.
 
+## Requirements
+
+- php >=7.1
+- ext-zip (ZipArchive class) 
+
 ## Installation
 
 Install [composer](https://getcomposer.org/), then:

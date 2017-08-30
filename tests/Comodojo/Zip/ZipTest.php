@@ -1,12 +1,14 @@
-<?php
+<?php namespace Comodojo\Zip\Tests;
 
 use \Comodojo\Zip\Zip;
 
-class ZipTest extends \PHPUnit_Framework_TestCase {
+class ZipTest extends AbstractTestCase {
 
     public function testConstruct() {
 
-        $zip = new Zip('fake.zip');
+        $name = $this->tmp('fake.zip');
+
+        $zip = new Zip($name);
 
         $this->assertInstanceOf('\Comodojo\Zip\Zip', $zip);
 
@@ -14,11 +16,13 @@ class ZipTest extends \PHPUnit_Framework_TestCase {
 
     public function testCreate() {
 
-        $zip = Zip::create(__DIR__.'/../tmp/test_1.zip');
+        $name = $this->tmp('test_1.zip');
+
+        $zip = Zip::create($name);
 
         $this->assertInstanceOf('\Comodojo\Zip\Zip', $zip);
 
-        $zip->add(__DIR__.'/../resources/lorem.txt');
+        $zip->add($this->resource('lorem.txt'));
 
         $close = $zip->close();
 
@@ -28,7 +32,9 @@ class ZipTest extends \PHPUnit_Framework_TestCase {
 
     public function testCheck() {
 
-        $check = Zip::check(__DIR__.'/../tmp/test_1.zip');
+        $name = $this->tmp('test_1.zip');
+
+        $check = Zip::check($name);
 
         $this->assertTrue($check);
 
@@ -36,7 +42,9 @@ class ZipTest extends \PHPUnit_Framework_TestCase {
 
     public function testOpen() {
 
-        $zip = Zip::open(__DIR__.'/../tmp/test_1.zip');
+        $name = $this->tmp('test_1.zip');
+
+        $zip = Zip::open($name);
 
         $this->assertInstanceOf('\Comodojo\Zip\Zip', $zip);
 
@@ -48,11 +56,13 @@ class ZipTest extends \PHPUnit_Framework_TestCase {
 
     public function testMultipleAdd() {
 
-        $zip = Zip::create(__DIR__.'/../tmp/test_2.zip');
+        $name = $this->tmp('test_2.zip');
+
+        $zip = Zip::create($name);
 
         $this->assertInstanceOf('\Comodojo\Zip\Zip', $zip);
 
-        $zip->setPath(__DIR__.'/../resources');
+        $zip->setPath($this->resource(null));
 
         $zip->add('lorem.txt');
 
@@ -70,9 +80,11 @@ class ZipTest extends \PHPUnit_Framework_TestCase {
 
     public function testListFiles() {
 
-        $zipFileShouldContain = array('lorem.txt','keepcalm.png');
+        $name = $this->tmp('test_2.zip');
 
-        $zip = Zip::open(__DIR__.'/../tmp/test_2.zip');
+        $zipFileShouldContain = ['lorem.txt','keepcalm.png'];
+
+        $zip = Zip::open($name);
 
         $this->assertInstanceOf('\Comodojo\Zip\Zip', $zip);
 
@@ -88,21 +100,26 @@ class ZipTest extends \PHPUnit_Framework_TestCase {
 
     public function testMask() {
 
-        $zip = new Zip('fake.zip');
+        $name = $this->tmp('fake.zip');
+        $new_mask = 0764;
 
-        $zip->setMask(0764);
+        $zip = new Zip($name);
+
+        $zip->setMask($new_mask);
 
         $this->assertInstanceOf('\Comodojo\Zip\Zip', $zip);
 
         $mask = $zip->getMask();
 
-        $this->assertSame(0764, $mask);
+        $this->assertSame($new_mask, $mask);
 
     }
 
     public function testSkipped() {
 
-        $zip = new Zip('fake.zip');
+        $name = $this->tmp('fake.zip');
+
+        $zip = new Zip($name);
 
         $zip->setSkipped("HIDDEN");
 
@@ -116,17 +133,21 @@ class ZipTest extends \PHPUnit_Framework_TestCase {
 
     public function testPassword() {
 
-        $zip = Zip::open(__DIR__.'/../resources/lorem.zip');
+        $name = $this->resource('lorem.zip');
+        $pass = "verycomplexpassword";
+        $dest = $this->tmp('test_password_extract');
 
-        $zip->setPassword("verycomplexpassword");
+        $zip = Zip::open($name);
+
+        $zip->setPassword($pass);
 
         $this->assertInstanceOf('\Comodojo\Zip\Zip', $zip);
 
         $password = $zip->getPassword();
 
-        $this->assertSame("verycomplexpassword", $password);
+        $this->assertSame($pass, $password);
 
-        $result = $zip->extract(__DIR__.'/../tmp/test_password_extract');
+        $result = $zip->extract($dest);
 
         $this->assertTrue($result);
 
@@ -134,7 +155,9 @@ class ZipTest extends \PHPUnit_Framework_TestCase {
 
     public function testGetArchive() {
 
-        $zip = Zip::open(__DIR__.'/../tmp/test_2.zip');
+        $name = $this->tmp('test_2.zip');
+
+        $zip = Zip::open($name);
 
         $this->assertInstanceOf('\Comodojo\Zip\Zip', $zip);
 
@@ -146,13 +169,14 @@ class ZipTest extends \PHPUnit_Framework_TestCase {
 
     public function testExtract() {
 
-        $zip = Zip::open(__DIR__.'/../tmp/test_2.zip');
+        $name = $this->tmp('test_2.zip');
+        $dest = $this->tmp('test_2_extract_1');
+
+        $zip = Zip::open($name);
 
         $this->assertInstanceOf('\Comodojo\Zip\Zip', $zip);
 
-        //$zip->setMask(0777);
-
-        $result = $zip->extract(__DIR__.'/../tmp/test_2_extract_1');
+        $result = $zip->extract($dest);
 
         $this->assertTrue($result);
 
@@ -160,11 +184,14 @@ class ZipTest extends \PHPUnit_Framework_TestCase {
 
     public function testRecursiveAdd() {
 
-        $zip = Zip::create(__DIR__.'/../tmp/test_3.zip');
+        $name = $this->tmp('test_3.zip');
+        $path = $this->resource(null);
+
+        $zip = Zip::create($name);
 
         $this->assertInstanceOf('\Comodojo\Zip\Zip', $zip);
 
-        $zip->add(__DIR__.'/../resources', true);
+        $zip->add($path, true);
 
         $this->assertInstanceOf('\Comodojo\Zip\Zip', $zip);
 
@@ -176,7 +203,9 @@ class ZipTest extends \PHPUnit_Framework_TestCase {
 
     public function testDelete() {
 
-        $zip = Zip::open(__DIR__.'/../tmp/test_3.zip');
+        $name = $this->tmp('test_3.zip');
+
+        $zip = Zip::open($name);
 
         $zip->delete('keepcalm.png');
 
@@ -193,7 +222,9 @@ class ZipTest extends \PHPUnit_Framework_TestCase {
      */
     public function testInvalidSkipMode() {
 
-        $zip = new Zip(__DIR__.'/../tmp/test_2.zip');
+        $name = $this->tmp('test_2.zip');
+
+        $zip = new Zip($name);
 
         $zip->setSkipped("FOO");
 

@@ -1,6 +1,5 @@
 <?php namespace Comodojo\Zip;
 
-use \Comodojo\Zip\Zip;
 use \Comodojo\Exception\ZipException;
 use \Exception;
 
@@ -29,16 +28,16 @@ class ZipManager {
      *
      * @var array
      */
-    private $zip_archives = array();
+    private $zip_archives = [];
 
     /**
-     * Add a \Coodojo\Zip\Zip object to manager
+     * Add a Zip object to manager
      *
-     * @param   \Comodojo\Zip\Zip  $zip
+     * @param   Zip  $zip
      *
-     * @return  \Comodojo\Zip\ZipManager
+     * @return  ZipManager
      */
-    public function addZip(\Comodojo\Zip\Zip $zip) {
+    public function addZip(Zip $zip): self {
 
         $this->zip_archives[] = $zip;
 
@@ -47,14 +46,14 @@ class ZipManager {
     }
 
     /**
-     * Remove a \Coodojo\Zip\Zip object from manager
+     * Remove a Zip object from manager
      *
-     * @param   \Comodojo\Zip\Zip  $zip
+     * @param   Zip  $zip
      *
-     * @return  \Comodojo\Zip\ZipManager
-     * @throws  \Comodojo\Exception\ZipException
+     * @return  ZipManager
+     * @throws  ZipException
      */
-    public function removeZip(\Comodojo\Zip\Zip $zip) {
+    public function removeZip(Zip $zip): self {
 
         $archive_key = array_search($zip, $this->zip_archives, true);
 
@@ -71,27 +70,25 @@ class ZipManager {
      *
      * @return  array
      */
-    public function listZips() {
+    public function listZips(): array {
 
-        $list = array();
-
-        foreach ( $this->zip_archives as $key=>$archive ) $list[$key] = $archive->getZipFile();
-
-        return $list;
+        return array_map(function($archive) {
+            return $archive->getZipFile();
+        }, $this->zip_archives);
 
     }
 
     /**
-     * Get a  a \Coodojo\Zip\Zip object
+     * Get a  a Zip object
      *
      * @param   int    $zipId    The zip id from self::listZips()
      *
-     * @return  \Comodojo\Zip\Zip
-     * @throws  \Comodojo\Exception\ZipException
+     * @return  Zip
+     * @throws  ZipException
      */
-    public function getZip($zipId) {
+    public function getZip(int $zipId): Zip {
 
-        if ( array_key_exists($zipId, $this->zip_archives) === false ) throw new ZipException("Archive not found");
+        if ( array_key_exists($zipId, $this->zip_archives) === false ) throw new ZipException("Archive id $zipId not found");
 
         return $this->zip_archives[$zipId];
 
@@ -103,10 +100,10 @@ class ZipManager {
      *
      * @param   string  $path
      *
-     * @return  \Comodojo\Zip\ZipManager
-     * @throws  \Comodojo\Exception\ZipException
+     * @return  ZipManager
+     * @throws  ZipException
      */
-    public function setPath($path) {
+    public function setPath(string $path): self {
 
         try {
 
@@ -127,13 +124,11 @@ class ZipManager {
      *
      * @return  array
      */
-    public function getPath() {
+    public function getPath(): array {
 
-        $paths = array();
-
-        foreach ( $this->zip_archives as $key=>$archive ) $paths[$key] = $archive->getPath();
-
-        return $paths;
+        return array_map(function($archive) {
+            return $archive->getPath();
+        }, $this->zip_archives);
 
     }
 
@@ -142,10 +137,10 @@ class ZipManager {
      *
      * @param   int  $mask
      *
-     * @return  \Comodojo\Zip\ZipManager
-     * @throws  \Comodojo\Exception\ZipException
+     * @return  ZipManager
+     * @throws  ZipException
      */
-    public function setMask($mask) {
+    public function setMask(int $mask): self {
 
         try {
 
@@ -168,11 +163,9 @@ class ZipManager {
      */
     public function getMask() {
 
-        $masks = array();
-
-        foreach ( $this->zip_archives as $key=>$archive ) $masks[$key] = $archive->getMask();
-
-        return $masks;
+        return array_map(function($archive) {
+            return $archive->getMask();
+        }, $this->zip_archives);
 
     }
 
@@ -180,11 +173,11 @@ class ZipManager {
      * Get a list of files in Zips
      *
      * @return  array
-     * @throws  \Comodojo\Exception\ZipException
+     * @throws  ZipException
      */
-    public function listFiles() {
+    public function listFiles(): array {
 
-        $files = array();
+        $files = [];
 
         try {
 
@@ -204,13 +197,13 @@ class ZipManager {
      * Extract Zips to common destination
      *
      * @param   string  $destination    Destination path
-     * @param   bool    $separate       Specify if files should be placed in different directories
-     * @param   array   $files          Array of files to extract
+     * @param   bool    $separate       (optional) Specify if files should be placed in different directories
+     * @param   mixed   $files          (optional) a filename or an array of filenames
      *
      * @return  bool
-     * @throws  \Comodojo\Exception\ZipException
+     * @throws  ZipException
      */
-    public function extract($destination, $separate = true, $files = null) {
+    public function extract(string $destination, bool $separate = true, $files = null): bool {
 
         try {
 
@@ -222,7 +215,7 @@ class ZipManager {
 
                 $local_destination = $separate ? ($local_path.$local_file['filename']) : $destination;
 
-                $archive->extract($local_destination, $files = null);
+                $archive->extract($local_destination, $files);
 
             }
 
@@ -243,23 +236,23 @@ class ZipManager {
      * @param   bool    $separate           Specify if files should be placed in different directories
      *
      * @return  bool
-     * @throws  \Comodojo\Exception\ZipException
+     * @throws  ZipException
      */
-    public function merge($output_zip_file, $separate = true) {
+    public function merge(string $output_zip_file, bool $separate = true): bool {
 
         $pathinfo = pathinfo($output_zip_file);
 
-        $temporary_folder = $pathinfo['dirname']."/".self::getTemporaryFolder();
+        $temporary_folder = $pathinfo['dirname']."/".ManagerTools::getTemporaryFolder();
 
         try {
 
-            $this->extract($temporary_folder, $separate, null);
+            $this->extract($temporary_folder, $separate);
 
             $zip = Zip::create($output_zip_file);
 
             $zip->add($temporary_folder, true)->close();
 
-            self::recursiveUnlink($temporary_folder);
+            ManagerTools::recursiveUnlink($temporary_folder);
 
         } catch (ZipException $ze) {
 
@@ -281,10 +274,10 @@ class ZipManager {
      * @param   mixed   $file_name_or_array     filename to add or an array of filenames
      * @param   bool    $flatten_root_folder    in case of directory, specify if root folder should be flatten or not
      *
-     * @return  \Comodojo\Zip\ZipManager
-     * @throws  \Comodojo\Exception\ZipException
+     * @return  ZipManager
+     * @throws  ZipException
      */
-    public function add($file_name_or_array, $flatten_root_folder = false) {
+    public function add($file_name_or_array, bool $flatten_root_folder = false): self {
 
         try {
 
@@ -305,10 +298,10 @@ class ZipManager {
      *
      * @param   mixed   $file_name_or_array     filename to add or an array of filenames
      *
-     * @return  \Comodojo\Zip\ZipManager
-     * @throws  \Comodojo\Exception\ZipException
+     * @return  ZipManager
+     * @throws  ZipException
      */
-    public function delete($file_name_or_array) {
+    public function delete($file_name_or_array): self {
 
         try {
 
@@ -328,9 +321,9 @@ class ZipManager {
      * Close Zips
      *
      * @return  bool
-     * @throws  \Comodojo\Exception\ZipException
+     * @throws  ZipException
      */
-    public function close() {
+    public function close(): bool {
 
         try {
 
@@ -343,49 +336,6 @@ class ZipManager {
         }
 
         return true;
-
-    }
-
-    private static function removeExtension($filename) {
-
-        $file_info = pathinfo($filename);
-
-        return $file_info['filename'];
-
-    }
-
-    private static function getTemporaryFolder() {
-
-        return "zip-temp-folder-".md5(uniqid(rand(), true), 0);
-
-    }
-
-    /**
-     * @param string $folder
-     */
-    private static function recursiveUnlink($folder) {
-
-        foreach ( new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($folder, \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST) as $path ) {
-
-            $pathname = $path->getPathname();
-
-            if ( $path->isDir() ) {
-
-                $action = rmdir($pathname);
-
-            } else {
-
-                $action = unlink($pathname);
-
-            }
-
-            if ( $action === false ) throw new Exception("Error deleting ".$pathname." during recursive unlink of folder ".$folder);
-
-        }
-
-        $action = rmdir($folder);
-
-        if ( $action === false ) throw new Exception("Error deleting folder ".$folder);
 
     }
 
