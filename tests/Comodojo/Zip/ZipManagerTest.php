@@ -20,35 +20,38 @@ class ZipManagerTest extends AbstractTestCase {
 
         $manager = new ZipManager();
 
+        $this->assertEquals(0, count($manager));
+
         $zip_1 = Zip::create($name_1);
         $zip_2 = Zip::create($name_2);
 
-        $addZip = $manager->addZip($zip_1)->addZip($zip_2);
+        $zip_1_id = $manager->addZip($zip_1);
+        $zip_2_id = $manager->addZip($zip_2);
+        $this->assertIsString($zip_1_id);
+        $this->assertIsString($zip_2_id);
 
-        $this->assertInstanceOf('\Comodojo\Zip\ZipManager', $manager);
+        $this->assertEquals(2, count($manager));
 
         $list = $manager->listZips();
 
-        $this->assertInternalType('array', $list);
-
+        $this->assertIsArray($list);
         $this->assertCount(2, $list);
 
-        $delZip = $manager->removeZip($zip_2);
-
-        $this->assertInstanceOf('\Comodojo\Zip\ZipManager', $manager);
+        $this->assertTrue($manager->removeZip($zip_2));
 
         $list = $manager->listZips();
-
-        $this->assertInternalType('array', $list);
-
+        $this->assertIsArray($list);
         $this->assertCount(1, $list);
 
-        $zip = $manager->getZip(0);
+        $zip = $manager->getZip($zip_1_id);
 
         $this->assertInstanceOf('\Comodojo\Zip\Zip', $zip);
+        $this->assertStringEndsWith('test_manager_1.zip', $zip->getZipFile());
+
+        $this->assertTrue($manager->removeZipById($zip_1_id));
+        $this->assertEquals(0, count($manager));
 
         $close = $manager->close();
-
         $this->assertTrue($close);
 
     }
@@ -62,11 +65,8 @@ class ZipManagerTest extends AbstractTestCase {
 
         $manager = new ZipManager();
 
-        $addZip = $manager
-            ->addZip(Zip::create($name_3))
-            ->addZip(Zip::create($name_4));
-
-        $this->assertInstanceOf('\Comodojo\Zip\ZipManager', $manager);
+        $this->assertIsString($manager->addZip(Zip::create($name_3)));
+        $this->assertIsString($manager->addZip(Zip::create($name_4)));
 
         $addFile = $manager->add($lorem);
 
@@ -87,11 +87,8 @@ class ZipManagerTest extends AbstractTestCase {
 
         $manager = new ZipManager();
 
-        $addZip = $manager
-            ->addZip(Zip::open($name_3))
-            ->addZip(Zip::open($name_4));
-
-        $this->assertInstanceOf('\Comodojo\Zip\ZipManager', $manager);
+        $this->assertIsString($manager->addZip(Zip::open($name_3)));
+        $this->assertIsString($manager->addZip(Zip::open($name_4)));
 
         $extract = $manager->extract($dest);
 
@@ -100,6 +97,25 @@ class ZipManagerTest extends AbstractTestCase {
         $close = $manager->close();
 
         $this->assertTrue($close);
+
+    }
+
+    public function testListFiles() {
+
+        $name_3 = $this->tmp('test_manager_3.zip');
+        $name_4 = $this->tmp('test_manager_4.zip');
+        $manager = new ZipManager();
+
+        $this->assertIsString($manager->addZip(Zip::open($name_3)));
+        $this->assertIsString($manager->addZip(Zip::open($name_4)));
+
+        $files = $manager->listFiles();
+        $this->assertIsArray($files);
+        foreach ($files as $key => $list) {
+            $this->assertIsString($key);
+            $this->assertIsArray($list);
+            $this->assertCount(1, $list);
+        }
 
     }
 
@@ -123,9 +139,8 @@ class ZipManagerTest extends AbstractTestCase {
 
         $manager = new ZipManager();
 
-        $addZip = $manager
-            ->addZip(Zip::open($name_5))
-            ->addZip(Zip::open($name_6));
+        $this->assertIsString($manager->addZip(Zip::open($name_5)));
+        $this->assertIsString($manager->addZip(Zip::open($name_6)));
 
         $merge = $manager->merge($mergefile);
 
@@ -135,10 +150,9 @@ class ZipManagerTest extends AbstractTestCase {
 
     }
 
-    /**
-     * @expectedException        Comodojo\Exception\ZipException
-     */
     public function testInvalidZipId() {
+
+        $this->expectException("\Comodojo\Exception\ZipException");
 
         $manager = new ZipManager();
 

@@ -1,6 +1,6 @@
-composer.phar
 composer.lock
 coverage.clover
+.phpunit.result.cache
 vendor/
 build/
 tests/tmp/*

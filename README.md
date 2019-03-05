@@ -11,7 +11,7 @@ From version 2.0.0, it supports multiple Zip files (extract, add file, remove fi
 ## Requirements
 
 - php >=7.1
-- ext-zip (ZipArchive class) 
+- ext-zip (ZipArchive class)
 
 ## Installation
 
@@ -267,7 +267,7 @@ The `\Comodojo\Zip\ZipManager` can handle multiple `\Comodojo\Zip\Zip` objects.
 
 ## Documentation
 
-- [API](https://api.comodojo.org/libs/Comodojo/Zip.html)
+- [API](http://api.comodojo.org/libs/zip)
 
 ## Contributing
 

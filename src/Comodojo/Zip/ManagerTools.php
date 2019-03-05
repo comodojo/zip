@@ -26,34 +26,38 @@ use \Exception;
 
 class ManagerTools {
 
+    /**
+     * Get a temporary folder name (random)
+     *
+     * @return string
+     */
     public static function getTemporaryFolder(): string {
-
-        // return UniqueId::generateCustom("zip-temp-folder");
 
         return "zip-temp-folder-".UniqueId::generate();
 
     }
 
     /**
-     * @param string $folder
+     * Unlink a folder recursively
+     *
+     * @param string $folder The folder to be removed
+     * @param bool $remove_folder If true, the folder itself will be removed
+     * @return bool
+     * @throws Exception
      */
     public static function recursiveUnlink(string $folder, bool $remove_folder = true): bool {
 
         try {
 
             self::emptyFolder($folder);
-
             if ( $remove_folder && rmdir($folder) === false ) {
-                throw new Exception("Error deleting folder ".$folder);
+                throw new Exception("Error deleting folder: $folder");
             }
+            return true;
 
         } catch (Exception $e) {
-
             throw $e;
-
         }
-
-        return true;
 
     }
 
@@ -69,16 +73,14 @@ class ManagerTools {
             $pathname = $path->getPathname();
 
             if ( $path->isDir() ) {
-
                 $action = rmdir($pathname);
-
             } else {
-
                 $action = unlink($pathname);
-
             }
 
-            if ( $action === false ) throw new Exception("Error deleting ".$pathname." during recursive unlink of folder ".$folder);
+            if ( $action === false ) {
+                throw new Exception("Error deleting $pathname during recursive unlink of folder: $folder");
+            }
 
         }
 

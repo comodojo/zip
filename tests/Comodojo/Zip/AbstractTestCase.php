@@ -7,15 +7,15 @@ class AbstractTestCase extends TestCase {
 
     protected $root;
 
-    protected function setUp() {
+    protected function setUp(): void {
         $this->root = realpath(dirname(__FILE__)."/../../root/");
     }
 
-    public static function setUpBeforeClass() {
+    public static function setUpBeforeClass(): void {
         self::cleanupTmp();
     }
 
-    public static function tearDownAfterClass() {
+    public static function tearDownAfterClass(): void {
         self::cleanupTmp();
     }
 
@@ -37,7 +37,7 @@ class AbstractTestCase extends TestCase {
         file_put_contents(
             "$tmp/.placeholder",
             "this file intentionally left blank\nyou can safely remove it"
-        );    
+        );
     }
 
 }

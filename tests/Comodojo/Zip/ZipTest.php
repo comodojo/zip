@@ -217,10 +217,25 @@ class ZipTest extends AbstractTestCase {
 
     }
 
-    /**
-     * @expectedException        Comodojo\Exception\ZipException
-     */
+    public function testCount() {
+
+        $name = $this->tmp('test_4.zip');
+
+        $zip = Zip::create($name);
+
+        $this->assertEquals(0, count($zip));
+
+        $zip->add($this->resource('lorem.txt'));
+
+        $this->assertEquals(1, count($zip));
+
+        $close = $zip->close();
+
+    }
+
     public function testInvalidSkipMode() {
+
+        $this->expectException("\Comodojo\Exception\ZipException");
 
         $name = $this->tmp('test_2.zip');
 
