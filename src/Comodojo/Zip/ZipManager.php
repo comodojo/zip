@@ -1,5 +1,6 @@
 <?php namespace Comodojo\Zip;
 
+use \Comodojo\Zip\Base\ManagerTools;
 use \Comodojo\Foundation\Utils\UniqueId;
 use \Comodojo\Exception\ZipException;
 use \Countable;

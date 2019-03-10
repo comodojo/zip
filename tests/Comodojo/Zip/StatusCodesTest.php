@@ -1,6 +1,6 @@
 <?php namespace Comodojo\Zip\Tests;
 
-use \Comodojo\Zip\StatusCodes;
+use \Comodojo\Zip\Base\StatusCodes;
 use \PHPUnit\Framework\TestCase;
 use \ZipArchive;
 

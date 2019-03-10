@@ -1,4 +1,4 @@
-<?php namespace Comodojo\Zip;
+<?php namespace Comodojo\Zip\Base;
 
 use \Comodojo\Foundation\Utils\UniqueId;
 use \RecursiveIteratorIterator;

@@ -1,5 +1,14 @@
 <?php namespace Comodojo\Zip;
 
+use \Comodojo\Zip\Interfaces\ZipInterface;
+use \Comodojo\Zip\Base\StatusCodes;
+use \Comodojo\Zip\Traits\{
+    SkipTrait,
+    MaskTrait,
+    PasswordTrait,
+    PathTrait,
+    ArchiveTrait
+};
 use \Comodojo\Foundation\Validation\DataFilter;
 use \Comodojo\Exception\ZipException;
 use \ZipArchive;
@@ -24,45 +33,13 @@ use \Countable;
  * THE SOFTWARE.
  */
 
-class Zip implements Countable {
+class Zip implements ZipInterface, Countable {
 
-    public const SKIP_NONE = 'NONE';
-
-    public const SKIP_HIDDEN = 'HIDDEN';
-
-    public const SKIP_ALL = 'ALL';
-
-    public const SKIP_COMODOJO = 'COMODOJO';
-
-    protected const DEFAULT_MASK = 0777;
-
-    /**
-     * Select files to skip
-     *
-     * @var string
-     */
-    private $skip_mode = self::SKIP_NONE;
-
-    /**
-     * Supported skip modes
-     *
-     * @var bool
-     */
-    private $supported_skip_modes = ['NONE', 'HIDDEN', 'ALL', 'COMODOJO'];
-
-    /**
-     * Mask for the extraction folder (if it should be created)
-     *
-     * @var int
-     */
-    private $mask = self::DEFAULT_MASK;
-
-    /**
-     * ZipArchive internal pointer
-     *
-     * @var ZipArchive
-     */
-    private $zip_archive;
+    use SkipTrait;
+    use MaskTrait;
+    use PasswordTrait;
+    use PathTrait;
+    use ArchiveTrait;
 
     /**
      * zip file name
@@ -70,20 +47,6 @@ class Zip implements Countable {
      * @var string
      */
     private $zip_file;
-
-    /**
-     * zip file password (only for extract)
-     *
-     * @var string
-     */
-    private $password;
-
-    /**
-     * Current base path
-     *
-     * @var string
-     */
-    private $path;
 
     /**
      * Class constructor
@@ -103,14 +66,9 @@ class Zip implements Countable {
     }
 
     /**
-     * Open a zip archive (static constructor)
-     *
-     * @param string $zip_file File name
-     *
-     * @return Zip
-     * @throws ZipException
+     * {@inheritdoc}
      */
-    public static function open(string $zip_file): Zip {
+    public static function open(string $zip_file): ZipInterface {
 
         try {
 
@@ -126,12 +84,7 @@ class Zip implements Countable {
     }
 
     /**
-     * Check a zip archive (static constructor)
-     *
-     * @param string $zip_file ZIP file name
-     *
-     * @return bool
-     * @throws ZipException
+     * {@inheritdoc}
      */
     public static function check(string $zip_file): bool {
 
@@ -149,15 +102,9 @@ class Zip implements Countable {
     }
 
     /**
-     * Create a new zip archive (static constructor)
-     *
-     * @param string $zip_file ZIP file name
-     * @param bool $overwrite Overwrite existing file (if any)
-     *
-     * @return Zip
-     * @throws ZipException
+     * {@inheritdoc}
      */
-    public static function create(string $zip_file, bool $overwrite = false): Zip {
+    public static function create(string $zip_file, bool $overwrite = false): ZipInterface {
 
         $overwrite = DataFilter::filterBoolean($overwrite);
 
@@ -192,164 +139,7 @@ class Zip implements Countable {
      * @return int
      */
     public function count(): int {
-        return count($this->zip_archive);
-    }
-
-    /**
-     * Set files to skip
-     *
-     * Supported skip modes:
-     *  Zip::SKIP_NONE - skip no files
-     *  Zip::SKIP_HIDDEN - skip hidden files
-     *  Zip::SKIP_ALL - skip HIDDEN + COMODOJO ghost files
-     *  Zip::SKIP_COMODOJO - skip comodojo ghost files
-     *
-     * @param string $mode Skip file mode
-     *
-     * @return  Zip
-     * @throws  ZipException
-     */
-    public function setSkipped(string $mode): Zip {
-
-        $mode = strtoupper($mode);
-
-        if ( !in_array($mode, $this->supported_skip_modes) ) {
-            throw new ZipException("Unsupported skip mode: $mode");
-        }
-
-        $this->skip_mode = $mode;
-
-        return $this;
-
-    }
-
-    /**
-     * Get current skip mode
-     *
-     * @return string
-     */
-    public function getSkipped(): string {
-
-        return $this->skip_mode;
-
-    }
-
-    /**
-     * Set zip password
-     *
-     * @param string $password
-     *
-     * @return Zip
-     */
-    public function setPassword(string $password): Zip {
-
-        $this->password = $password;
-
-        return $this;
-
-    }
-
-    /**
-     * Get current zip password
-     *
-     * @return string
-     */
-    public function getPassword(): ?string {
-
-        return $this->password;
-
-    }
-
-    /**
-     * Set current base path (to add relative files to zip archive)
-     *
-     * @param string|null $path
-     *
-     * @return Zip
-     * @throws ZipException
-     */
-    public function setPath(?string $path = null): Zip {
-
-        if ( $path === null ) {
-            $this->path = null;
-        } else if ( !file_exists($path) ) {
-            throw new ZipException("Not existent path: $path");
-        } else {
-            $this->path = $path;
-        }
-
-        return $this;
-
-    }
-
-    /**
-     * Get current base path
-     *
-     * @return string|null
-     */
-    public function getPath(): ?string {
-
-        return $this->path;
-
-    }
-
-    /**
-     * Set the mask of the extraction folder
-     *
-     * @param int $mask Integer representation of the file mask
-     *
-     * @return Zip
-     */
-    public function setMask(int $mask): Zip {
-
-        $mask = filter_var($mask, FILTER_VALIDATE_INT, [
-            "options" => [
-                "max_range" => self::DEFAULT_MASK,
-                "default" => self::DEFAULT_MASK
-            ],
-            'flags' => FILTER_FLAG_ALLOW_OCTAL
-        ]);
-        $this->mask = $mask;
-
-        return $this;
-
-    }
-
-    /**
-     * Get current mask of the extraction folder
-     *
-     * @return int
-     */
-    public function getMask(): int {
-
-        return $this->mask;
-
-    }
-
-    /**
-     * Set the current ZipArchive object
-     *
-     * @param ZipArchive $zip
-     *
-     * @return Zip
-     */
-    public function setArchive(ZipArchive $zip): Zip {
-
-        $this->zip_archive = $zip;
-
-        return $this;
-
-    }
-
-    /**
-     * Get current ZipArchive object
-     *
-     * @return ZipArchive|null
-     */
-    public function getArchive(): ?ZipArchive {
-
-        return $this->zip_archive;
-
+        return count($this->getArchive());
     }
 
     /**
@@ -373,11 +163,11 @@ class Zip implements Countable {
 
         $list = [];
 
-        for ( $i = 0; $i < $this->zip_archive->numFiles; $i++ ) {
+        for ( $i = 0; $i < $this->getArchive()->numFiles; $i++ ) {
 
-            $name = $this->zip_archive->getNameIndex($i);
+            $name = $this->getArchive()->getNameIndex($i);
             if ( $name === false ) {
-                throw new ZipException(StatusCodes::get($this->zip_archive->status));
+                throw new ZipException(StatusCodes::get($this->getArchive()->status));
             }
             $list[] = $name;
 
@@ -405,7 +195,7 @@ class Zip implements Countable {
         if ( !file_exists($destination) ) {
 
             $omask = umask(0);
-            $action = mkdir($destination, $this->mask, true);
+            $action = mkdir($destination, $this->getMask(), true);
             umask($omask);
 
             if ( $action === false ) {
@@ -424,14 +214,14 @@ class Zip implements Countable {
             $file_matrix = $this->getArchiveFiles();
         }
 
-        if ( !empty($this->password) ) {
-            $this->zip_archive->setPassword($this->password);
+        if ( !empty($this->getPassword()) ) {
+            $this->getArchive()->setPassword($this->getPassword());
         }
 
-        $extract = $this->zip_archive->extractTo($destination, $file_matrix);
+        $extract = $this->getArchive()->extractTo($destination, $file_matrix);
 
         if ( $extract === false ) {
-            throw new ZipException(StatusCodes::get($this->zip_archive->status));
+            throw new ZipException(StatusCodes::get($this->getArchive()->status));
         }
 
         return true;
@@ -513,8 +303,8 @@ class Zip implements Countable {
      */
     public function close(): bool {
 
-        if ( $this->zip_archive->close() === false ) {
-            throw new ZipException(StatusCodes::get($this->zip_archive->status));
+        if ( $this->getArchive()->close() === false ) {
+            throw new ZipException(StatusCodes::get($this->getArchive()->status));
         }
 
         return true;
@@ -530,25 +320,24 @@ class Zip implements Countable {
 
         $list = [];
 
-        for ( $i = 0; $i < $this->zip_archive->numFiles; $i++ ) {
+        for ( $i = 0; $i < $this->getArchive()->numFiles; $i++ ) {
 
-            $file = $this->zip_archive->statIndex($i);
+            $file = $this->getArchive()->statIndex($i);
             if ( $file === false ) {
                 continue;
             }
 
             $name = str_replace('\\', '/', $file['name']);
             if (
-                $name[0] == "." &&
-                in_array($this->skip_mode, ["HIDDEN", "ALL"])
-            ) {
-                continue;
-            }
-
-            if (
-                $name[0] == "." &&
-                @$name[1] == "_" &&
-                in_array($this->skip_mode, ["COMODOJO", "ALL"])
+                (
+                    $name[0] == "." &&
+                    in_array($this->getSkipMode(), ["HIDDEN", "ALL"])
+                ) ||
+                (
+                    $name[0] == "." &&
+                    @$name[1] == "_" &&
+                    in_array($this->getSkipMode(), ["COMODOJO", "ALL"])
+                )
             ) {
                 continue;
             }
@@ -576,23 +365,22 @@ class Zip implements Countable {
         ?string $base = null
     ): void {
 
-        $file = is_null($this->path) ? $file : $this->path."/$file";
+        $file = is_null($this->getPath()) ? $file : $this->getPath()."/$file";
         $real_file = str_replace('\\', '/', realpath($file));
         $real_name = basename($real_file);
 
         if ( !is_null($base) ) {
 
             if (
-                $real_name[0] == "." &&
-                in_array($this->skip_mode, ["HIDDEN", "ALL"])
-            ) {
-                return;
-            }
-
-            if (
-                $real_name[0] == "." &&
-                @$real_name[1] == "_" &&
-                in_array($this->skip_mode, ["COMODOJO", "ALL"])
+                (
+                    $real_name[0] == "." &&
+                    in_array($this->getSkipMode(), ["HIDDEN", "ALL"])
+                ) ||
+                (
+                    $real_name[0] == "." &&
+                    @$real_name[1] == "_" &&
+                    in_array($this->getSkipMode(), ["COMODOJO", "ALL"])
+                )
             ) {
                 return;
             }
@@ -600,46 +388,63 @@ class Zip implements Countable {
         }
 
         if ( is_dir($real_file) ) {
-
-            if ( !$flatroot ) {
-
-                $folder_target = is_null($base) ? $real_name : $base.$real_name;
-                $new_folder = $this->zip_archive->addEmptyDir($folder_target);
-                if ( $new_folder === false ) {
-                    throw new ZipException(StatusCodes::get($this->zip_archive->status));
-                }
-
-            } else {
-                $folder_target = null;
-            }
-
-            foreach ( new DirectoryIterator($real_file) as $path ) {
-
-                if ( $path->isDot() ) {
-                    continue;
-                }
-
-                $file_real = $path->getPathname();
-                $base = is_null($folder_target) ? null : ($folder_target."/");
-
-                try {
-                    $this->addItem($file_real, false, $base);
-                } catch (ZipException $ze) {
-                    throw $ze;
-                }
-
-            }
-
+            $this->addDirectoryItem($real_file, $real_name, $base, $flatroot);
         } else if ( is_file($real_file) ) {
+            $this->addFileItem($real_file, $real_name, $base);
+        } else {
+            return;
+        }
 
-            $file_target = is_null($base) ? $real_name : $base.$real_name;
-            $add_file = $this->zip_archive->addFile($real_file, $file_target);
-            if ( $add_file === false ) {
-                throw new ZipException(StatusCodes::get($this->zip_archive->status));
+    }
+
+    private function addFileItem(
+        string $real_file,
+        string $real_name,
+        ?string $base = null
+    ): void {
+
+        $file_target = is_null($base) ? $real_name : $base.$real_name;
+        $add_file = $this->getArchive()->addFile($real_file, $file_target);
+        if ( $add_file === false ) {
+            throw new ZipException(StatusCodes::get($this->getArchive()->status));
+        }
+
+    }
+
+    private function addDirectoryItem(
+        string $real_file,
+        string $real_name,
+        ?string $base = null,
+        bool $flatroot
+    ): void {
+
+        if ( !$flatroot ) {
+
+            $folder_target = is_null($base) ? $real_name : $base.$real_name;
+            $new_folder = $this->getArchive()->addEmptyDir($folder_target);
+            if ( $new_folder === false ) {
+                throw new ZipException(StatusCodes::get($this->getArchive()->status));
             }
 
         } else {
-            return;
+            $folder_target = null;
+        }
+
+        foreach ( new DirectoryIterator($real_file) as $path ) {
+
+            if ( $path->isDot() ) {
+                continue;
+            }
+
+            $file_real = $path->getPathname();
+            $base = is_null($folder_target) ? null : ($folder_target."/");
+
+            try {
+                $this->addItem($file_real, false, $base);
+            } catch (ZipException $ze) {
+                throw $ze;
+            }
+
         }
 
     }
@@ -653,9 +458,9 @@ class Zip implements Countable {
      */
     private function deleteItem(string $file): void {
 
-        $deleted = $this->zip_archive->deleteName($file);
+        $deleted = $this->getArchive()->deleteName($file);
         if ( $deleted === false ) {
-            throw new ZipException(StatusCodes::get($this->zip_archive->status));
+            throw new ZipException(StatusCodes::get($this->getArchive()->status));
         }
 
     }

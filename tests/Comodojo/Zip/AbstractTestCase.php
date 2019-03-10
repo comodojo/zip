@@ -1,7 +1,7 @@
 <?php namespace Comodojo\Zip\Tests;
 
 use \PHPUnit\Framework\TestCase;
-use \Comodojo\Zip\ManagerTools;
+use \Comodojo\Zip\Base\ManagerTools;
 
 class AbstractTestCase extends TestCase {
 

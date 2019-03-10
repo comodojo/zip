@@ -1,4 +1,4 @@
-<?php namespace Comodojo\Zip;
+<?php namespace Comodojo\Zip\Base;
 
 use \ZipArchive;
 

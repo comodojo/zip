@@ -11,6 +11,8 @@ CHANGELOG
 * [New API] ZipManager class now implements the Countable interface
 * [New API] Zip class now implements the Countable interface
 * [New API] ZipManager::removeZipById() to remove a Zip object using its id
+* [Deprecated API] Zip::getSkipped and Zip::setSkipped are deprecated
+* [New API] Zip::getSkipMode and Zip::setSkipMode
 
 3.0.0-beta
 ----------
