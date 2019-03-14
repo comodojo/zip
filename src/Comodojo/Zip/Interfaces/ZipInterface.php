@@ -34,6 +34,12 @@ interface ZipInterface {
 
     public const SKIP_COMODOJO = 'COMODOJO';
 
+    public const CM_DEFAULT = ZipArchive::CM_DEFAULT;
+
+    public const CM_STORE = ZipArchive::CM_STORE;
+
+    public const CM_DEFLATE = ZipArchive::CM_DEFLATE;
+
     /**
      * Open a zip archive (static constructor)
      *
@@ -64,5 +70,62 @@ interface ZipInterface {
      * @throws ZipException
      */
     public static function create(string $zip_file, bool $overwrite = false): ZipInterface;
+
+    /**
+     * Get the list of files in the archive as an array
+     *
+     * @return array
+     * @throws ZipException
+     */
+    public function listFiles(): array;
+
+    /**
+     * Extract files from zip archive
+     *
+     * @param string $destination Destination path
+     * @param mixed $files (optional) a filename or an array of filenames
+     *
+     * @return bool
+     * @throws ZipException
+     */
+    public function extract(string $destination, $files = null): bool;
+
+    /**
+     * Add files to the ZipArchive
+     *
+     * @param mixed $file_name_or_array
+     *  Filename to add or an array of filenames
+     * @param bool $flatten_root_folder
+     *  In case of directory, specify if root folder should be flatten or not
+     * @param int $compression
+     *  Compression algorithm to use (default CM_DEFAULT)
+     *
+     * @return Zip
+     * @throws ZipException
+     */
+    public function add(
+        $file_name_or_array,
+        bool $flatten_root_folder = false,
+        int $compression = self::CM_DEFAULT
+    ): ZipInterface;
+
+    /**
+     * Delete files from ZipArchive
+     *
+     * @param mixed $file_name_or_array
+     *  Filename to delete or an array of filenames
+     *
+     * @return Zip
+     * @throws ZipException
+     */
+    public function delete($file_name_or_array): ZipInterface;
+
+    /**
+     * Close the ZipArchive
+     *
+     * @return bool
+     * @throws ZipException
+     */
+    public function close(): bool;
 
 }

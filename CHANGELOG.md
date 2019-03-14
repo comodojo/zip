@@ -13,6 +13,7 @@ CHANGELOG
 * [New API] ZipManager::removeZipById() to remove a Zip object using its id
 * [Deprecated API] Zip::getSkipped and Zip::setSkipped are deprecated
 * [New API] Zip::getSkipMode and Zip::setSkipMode
+* [New Feature] Support for ZipArchive file compression
 
 3.0.0-beta
 ----------

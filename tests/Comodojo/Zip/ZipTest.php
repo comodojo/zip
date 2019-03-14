@@ -24,9 +24,7 @@ class ZipTest extends AbstractTestCase {
 
         $zip->add($this->resource('lorem.txt'));
 
-        $close = $zip->close();
-
-        $this->assertTrue($close);
+        $this->assertTrue($zip->close());
 
     }
 
@@ -48,9 +46,7 @@ class ZipTest extends AbstractTestCase {
 
         $this->assertInstanceOf('\Comodojo\Zip\Zip', $zip);
 
-        $close = $zip->close();
-
-        $this->assertTrue($close);
+        $this->assertTrue($zip->close());
 
     }
 
@@ -72,9 +68,7 @@ class ZipTest extends AbstractTestCase {
 
         $this->assertInstanceOf('\Comodojo\Zip\Zip', $zip);
 
-        $close = $zip->close();
-
-        $this->assertTrue($close);
+        $this->assertTrue($zip->close());
 
     }
 
@@ -92,9 +86,7 @@ class ZipTest extends AbstractTestCase {
 
         $this->assertEmpty(array_diff($list, $zipFileShouldContain));
 
-        $close = $zip->close();
-
-        $this->assertTrue($close);
+        $this->assertTrue($zip->close());
 
     }
 
@@ -195,9 +187,7 @@ class ZipTest extends AbstractTestCase {
 
         $this->assertInstanceOf('\Comodojo\Zip\Zip', $zip);
 
-        $close = $zip->close();
-
-        $this->assertTrue($close);
+        $this->assertTrue($zip->close());
 
     }
 
@@ -211,9 +201,7 @@ class ZipTest extends AbstractTestCase {
 
         $this->assertInstanceOf('\Comodojo\Zip\Zip', $zip);
 
-        $close = $zip->close();
-
-        $this->assertTrue($close);
+        $this->assertTrue($zip->close());
 
     }
 
@@ -229,7 +217,7 @@ class ZipTest extends AbstractTestCase {
 
         $this->assertEquals(1, count($zip));
 
-        $close = $zip->close();
+        $this->assertTrue($zip->close());
 
     }
 
@@ -242,6 +230,53 @@ class ZipTest extends AbstractTestCase {
         $zip = new Zip($name);
 
         $zip->setSkipped("FOO");
+
+    }
+
+    /**
+     * @dataProvider compressionProvider
+     */
+    public function testFileCompression($idx, $comp) {
+
+        $name = $this->tmp("test_$idx.zip");
+
+        $zip = Zip::create($name);
+
+        $zip->add($this->resource('lorem.txt'), false, $comp);
+
+        $this->assertTrue($zip->close());
+
+    }
+
+    public function compressionProvider() {
+        return [
+            [10, Zip::CM_STORE],
+            [11, Zip::CM_DEFLATE],
+            [12, Zip::CM_DEFAULT]
+        ];
+    }
+
+    public function testMixedFileCompression() {
+
+        $name = $this->tmp("test_15.zip");
+
+        $zip = Zip::create($name);
+
+        $zip->add($this->resource('lorem.txt'), false, Zip::CM_STORE)
+            ->add($this->resource('keepcalm.png'), false, Zip::CM_DEFAULT)
+            ->add($this->resource('resource'), false, Zip::CM_DEFLATE);
+
+        $this->assertTrue($zip->close());
+
+    }
+
+    public function testOpenCompressedFile() {
+
+        $name = $this->tmp('test_15.zip');
+        $zip = Zip::open($name);
+
+        $zip->delete('keepcalm.png');
+        $this->assertTrue($zip->close());
 
     }
 
