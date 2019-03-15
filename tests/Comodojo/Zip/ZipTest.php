@@ -280,4 +280,63 @@ class ZipTest extends AbstractTestCase {
 
     }
 
+    /**
+     * @dataProvider encryptionProvider
+     */
+    public function testFileEncrypt($idx, $encryption) {
+
+        $name = $this->tmp("test_$idx.zip");
+
+        $zip = Zip::create($name);
+
+        $zip->setPassword('FordPerfect')
+            ->add(
+                $this->resource('lorem.txt'),
+                false,
+                Zip::CM_DEFAULT,
+                $encryption
+            );
+
+        $this->assertTrue($zip->close());
+
+    }
+
+    public function encryptionProvider() {
+        return [
+            [20, Zip::EM_AES_128],
+            [21, Zip::EM_AES_192],
+            [22, Zip::EM_AES_256]
+        ];
+    }
+
+    public function testMixedFileEncryption() {
+
+        $name = $this->tmp("test_25.zip");
+
+        $zip = Zip::create($name);
+
+        $zip->setPassword('FordPerfect')
+            ->add(
+                $this->resource('lorem.txt'),
+                false,
+                Zip::CM_DEFAULT,
+                Zip::EM_AES_192
+            )
+            ->add(
+                $this->resource('keepcalm.png'),
+                false,
+                Zip::CM_DEFAULT,
+                Zip::EM_AES_256
+            )
+            ->add(
+                $this->resource('resource'),
+                false,
+                Zip::CM_DEFAULT,
+                Zip::EM_NONE
+            );
+
+        $this->assertTrue($zip->close());
+
+    }
+
 }

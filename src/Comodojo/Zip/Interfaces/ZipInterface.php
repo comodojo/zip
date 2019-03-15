@@ -40,6 +40,14 @@ interface ZipInterface {
 
     public const CM_DEFLATE = ZipArchive::CM_DEFLATE;
 
+    public const EM_NONE = ZipArchive::EM_NONE;
+
+    public const EM_AES_128 = ZipArchive::EM_AES_128;
+
+    public const EM_AES_192 = ZipArchive::EM_AES_192;
+
+    public const EM_AES_256 = ZipArchive::EM_AES_256;
+
     /**
      * Open a zip archive (static constructor)
      *
@@ -106,7 +114,8 @@ interface ZipInterface {
     public function add(
         $file_name_or_array,
         bool $flatten_root_folder = false,
-        int $compression = self::CM_DEFAULT
+        int $compression = self::CM_DEFAULT,
+        int $encryption = self::EM_NONE
     ): ZipInterface;
 
     /**

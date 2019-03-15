@@ -223,11 +223,16 @@ class Zip implements ZipInterface, Countable {
     public function add(
         $file_name_or_array,
         bool $flatten_root_folder = false,
-        int $compression = self::CM_DEFAULT
+        int $compression = self::CM_DEFAULT,
+        int $encryption = self::EM_NONE
     ): ZipInterface {
 
         if ( empty($file_name_or_array) ) {
             throw new ZipException(StatusCodes::get(ZipArchive::ER_NOENT));
+        }
+
+        if ( $encryption !== self::EM_NONE && $this->getPassword() === null ) {
+            throw new ZipException("Cannot encrypt resource: no password set");
         }
 
         $flatten_root_folder = DataFilter::filterBoolean($flatten_root_folder);
@@ -236,10 +241,10 @@ class Zip implements ZipInterface, Countable {
 
             if ( is_array($file_name_or_array) ) {
                 foreach ( $file_name_or_array as $file_name ) {
-                    $this->addItem($file_name, $flatten_root_folder, $compression);
+                    $this->addItem($file_name, $flatten_root_folder, $compression, $encryption);
                 }
             } else {
-                $this->addItem($file_name_or_array, $flatten_root_folder, $compression);
+                $this->addItem($file_name_or_array, $flatten_root_folder, $compression, $encryption);
             }
 
         } catch (ZipException $ze) {
@@ -342,6 +347,7 @@ class Zip implements ZipInterface, Countable {
         string $file,
         bool $flatroot = false,
         int $compression = self::CM_DEFAULT,
+        int $encryption = self::EM_NONE,
         ?string $base = null
     ): void {
 
@@ -367,9 +373,9 @@ class Zip implements ZipInterface, Countable {
         }
 
         if ( is_dir($real_file) ) {
-            $this->addDirectoryItem($real_file, $real_name, $compression, $base, $flatroot);
+            $this->addDirectoryItem($real_file, $real_name, $compression, $encryption, $base, $flatroot);
         } else {
-            $this->addFileItem($real_file, $real_name, $compression, $base);
+            $this->addFileItem($real_file, $real_name, $compression, $encryption, $base);
         }
 
     }
@@ -378,13 +384,15 @@ class Zip implements ZipInterface, Countable {
         string $real_file,
         string $real_name,
         int $compression = self::CM_DEFAULT,
+        int $encryption = self::EM_NONE,
         ?string $base = null
     ): void {
 
         $file_target = is_null($base) ? $real_name : $base.$real_name;
         if (
             $this->getArchive()->addFile($real_file, $file_target) === false ||
-            $this->getArchive()->setCompressionName($file_target, $compression) === false
+            $this->getArchive()->setCompressionName($file_target, $compression) === false ||
+            $this->getArchive()->setEncryptionName($file_target, $encryption, $this->getPassword()) === false
         ) {
             throw new ZipException(StatusCodes::get($this->getArchive()->status));
         }
@@ -395,6 +403,7 @@ class Zip implements ZipInterface, Countable {
         string $real_file,
         string $real_name,
         int $compression = self::CM_DEFAULT,
+        int $encryption = self::EM_NONE,
         ?string $base = null,
         bool $flatroot = false
     ): void {
@@ -420,6 +429,7 @@ class Zip implements ZipInterface, Countable {
                     $path->getPathname(),
                     false,
                     $compression,
+                    $encryption,
                     $new_base
                 );
             } catch (ZipException $ze) {
