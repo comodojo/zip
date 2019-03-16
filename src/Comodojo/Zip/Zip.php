@@ -7,7 +7,8 @@ use \Comodojo\Zip\Traits\{
     MaskTrait,
     PasswordTrait,
     PathTrait,
-    ArchiveTrait
+    ArchiveTrait,
+    CommentTrait
 };
 use \Comodojo\Foundation\Validation\DataFilter;
 use \Comodojo\Exception\ZipException;
@@ -40,6 +41,7 @@ class Zip implements ZipInterface, Countable {
     use PasswordTrait;
     use PathTrait;
     use ArchiveTrait;
+    use CommentTrait;
 
     /**
      * zip file name
@@ -203,10 +205,6 @@ class Zip implements ZipInterface, Countable {
             $file_matrix = $files;
         } else {
             $file_matrix = $this->getArchiveFiles();
-        }
-
-        if ( !empty($this->getPassword()) ) {
-            $this->getArchive()->setPassword($this->getPassword());
         }
 
         if ( $this->getArchive()->extractTo($destination, $file_matrix) === false ) {
@@ -392,7 +390,7 @@ class Zip implements ZipInterface, Countable {
         if (
             $this->getArchive()->addFile($real_file, $file_target) === false ||
             $this->getArchive()->setCompressionName($file_target, $compression) === false ||
-            $this->getArchive()->setEncryptionName($file_target, $encryption, $this->getPassword()) === false
+            $this->getArchive()->setEncryptionName($file_target, $encryption) === false
         ) {
             throw new ZipException(StatusCodes::get($this->getArchive()->status));
         }

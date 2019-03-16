@@ -39,6 +39,7 @@ trait PasswordTrait {
     public function setPassword(string $password): ZipInterface {
 
         $this->password = $password;
+        $this->getArchive()->setPassword($password);
 
         return $this;
 
@@ -49,7 +50,7 @@ trait PasswordTrait {
      *
      * @return string
      */
-    public function getPassword(): ?string {
+    protected function getPassword(): ?string {
 
         return $this->password;
 

@@ -1,10 +1,9 @@
 <?php namespace Comodojo\Zip\Traits;
 
 use \Comodojo\Zip\Interfaces\ZipInterface;
-use \ZipArchive;
 
 /**
- * Archive helper trait.
+ * Set/get the archive comment.
  *
  * @package     Comodojo Zip
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
@@ -21,38 +20,29 @@ use \ZipArchive;
  * THE SOFTWARE.
  */
 
-trait ArchiveTrait {
+trait CommentTrait {
 
     /**
-     * ZipArchive internal pointer
-     *
-     * @var ZipArchive
-     */
-    private $zip_archive;
-
-    /**
-     * Set the current ZipArchive object
-     *
-     * @param ZipArchive $zip
+     * Set the comment for the current archive
      *
      * @return ZipInterface
      */
-    public function setArchive(ZipArchive $zip): ZipInterface {
+    public function setComment(string $comment): ZipInterface {
 
-        $this->zip_archive = $zip;
+        $this->getArchive()->setArchiveComment($comment);
 
         return $this;
 
     }
 
     /**
-     * Get current ZipArchive object
+     * Get the current zip archive comment
      *
-     * @return ZipArchive|null
+     * @return string
      */
-    public function getArchive(): ?ZipArchive {
+    public function getComment(): ?string {
 
-        return $this->zip_archive;
+        return $this->getArchive()->getArchiveComment();
 
     }
 

@@ -135,10 +135,6 @@ class ZipTest extends AbstractTestCase {
 
         $this->assertInstanceOf('\Comodojo\Zip\Zip', $zip);
 
-        $password = $zip->getPassword();
-
-        $this->assertSame($pass, $password);
-
         $result = $zip->extract($dest);
 
         $this->assertTrue($result);
@@ -336,6 +332,27 @@ class ZipTest extends AbstractTestCase {
             );
 
         $this->assertTrue($zip->close());
+
+    }
+
+    public function testSetArchiveComment() {
+
+        $name = $this->tmp("test_26.zip");
+        $zip = Zip::create($name);
+        $zip->add($this->resource('lorem.txt'));
+        $comment = "This is a comment";
+
+        $zip->setComment($comment);
+        $this->assertEquals($comment, $zip->getComment());
+
+    }
+
+    public function testGetArchiveComment() {
+
+        $name = $this->tmp("test_26.zip");
+        $zip = Zip::open($name);
+        $comment = "This is a comment";
+        $this->assertEquals($comment, $zip->getComment());
 
     }
 

@@ -8,11 +8,13 @@ CHANGELOG
 * code refactoring
 * [API Change] `ZipManager::addZip()` now returns Zip id instead of self
 * [API Change] `ZipManager::removeZip()` now returns bool instead of self
+* [API Change] `ZipManager::getPassword()` is now protected
 * [New API] ZipManager class now implements the Countable interface
 * [New API] Zip class now implements the Countable interface
 * [New API] `ZipManager::removeZipById()` to remove a Zip object using its id
-* [Deprecated API] `Zip::getSkipped()` and `Zip::setSkipped()` are deprecated
 * [New API] `Zip::getSkipMode()` and `Zip::setSkipMode()`
+* [New Api] `Zip::getComment()` and `Zip::setComment()`
+* [Deprecated API] `Zip::getSkipped()` and `Zip::setSkipped()` are deprecated
 * [New Feature] Support for zip file compression
 * [New Feature] Create encrypted (password protected) zip files
 
