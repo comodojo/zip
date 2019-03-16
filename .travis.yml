@@ -3,14 +3,12 @@ language: php
 php:
   - 7.2
   - 7.3
-  - nightly
 
 matrix:
   fast_finish: true
-  allow_failures:
-      - php: nightly
 
 before_script:
+  - if [[ $TRAVIS_PHP_VERSION = "7.2" ]]; then pecl install zip; fi
   - composer update --prefer-stable
 
 script: ./vendor/bin/phpunit
