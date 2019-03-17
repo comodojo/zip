@@ -1,14 +1,11 @@
 language: php
+dist: xenial
 
 php:
   - 7.2
   - 7.3
 
-matrix:
-  fast_finish: true
-
 before_script:
-  - if [[ $TRAVIS_PHP_VERSION = "7.2" ]]; then apt install libzip-dev libzip zip && pecl install zip; fi
   - composer update --prefer-stable
 
 script: ./vendor/bin/phpunit

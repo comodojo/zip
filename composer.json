@@ -1,6 +1,6 @@
 {
     "name": "comodojo/zip",
-    "description": "ZipArchive toolbox",
+    "description": "PHP ZipArchive toolbox",
     "license": "MIT",
     "keywords": [
         "zip",
