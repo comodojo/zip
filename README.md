@@ -4,8 +4,6 @@
 
 PHP ZipArchive toolbox
 
-***This is the development branch, please do not use it in production***
-
 This library simplifies and automates zip files management using [PHP ZipArchive](http://php.net/manual/en/class.ziparchive.php). It includes the `\Comodojo\Zip\ZipManager` class to manage multiple Zip files at once (extract, add, remove, merge).
 
 ## Installation
