@@ -1,10 +1,7 @@
 <?php namespace Comodojo\Zip\Interfaces;
 
-use \Comodojo\Foundation\Validation\DataFilter;
 use \Comodojo\Exception\ZipException;
 use \ZipArchive;
-use \DirectoryIterator;
-use \Countable;
 
 /**
  * comodojo/zip - ZipArchive toolbox

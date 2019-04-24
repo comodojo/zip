@@ -2,7 +2,7 @@ CHANGELOG
 =========
 
 3.0.0-beta2
-----------
+-----------
 
 * min php version to 7.2
 * code refactoring
