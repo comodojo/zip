@@ -5,7 +5,7 @@
          backupGlobals="false"
          backupStaticAttributes="false"
          colors="true"
-         forceCoversAnnotation="true"
+         forceCoversAnnotation="false"
          beStrictAboutCoversAnnotation="true"
          beStrictAboutOutputDuringTests="true"
          beStrictAboutTodoAnnotatedTests="true"
