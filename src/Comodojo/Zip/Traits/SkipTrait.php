@@ -33,7 +33,7 @@ trait SkipTrait {
     /**
      * Supported skip modes
      *
-     * @var bool
+     * @var array
      */
     private $supported_skip_modes = ['NONE', 'HIDDEN', 'ALL', 'COMODOJO'];
 
@@ -48,7 +48,7 @@ trait SkipTrait {
      *
      * @param string $mode Skip file mode
      *
-     * @return  Zip
+     * @return  ZipInterface
      * @throws  ZipException
      *
      * @deprecated

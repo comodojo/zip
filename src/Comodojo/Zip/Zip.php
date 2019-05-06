@@ -141,7 +141,7 @@ class Zip implements ZipInterface, Countable {
      * @return int
      */
     public function count(): int {
-        return count($this->getArchive());
+        return count(/** @scrutinizer ignore-type */ $this->getArchive());
     }
 
     /**

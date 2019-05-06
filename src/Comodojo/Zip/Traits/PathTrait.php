@@ -35,7 +35,7 @@ trait PathTrait {
      *
      * @param string|null $path
      *
-     * @return Zip
+     * @return ZipInterface
      * @throws ZipException
      */
     public function setPath(?string $path = null): ZipInterface {

@@ -1,6 +1,7 @@
 <?php namespace Comodojo\Zip\Traits;
 
 use \Comodojo\Zip\Interfaces\ZipInterface;
+use \ZipArchive;
 
 /**
  * Set/get the archive comment.
@@ -21,6 +22,8 @@ use \Comodojo\Zip\Interfaces\ZipInterface;
  */
 
 trait CommentTrait {
+
+    abstract public function getArchive(): ?ZipArchive;
 
     /**
      * Set the comment for the current archive

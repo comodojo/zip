@@ -1,22 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<phpunit bootstrap="tests/bootstrap.php"
-    backupGlobals="false"
-    backupStaticAttributes="false"
-    colors="true"
-    verbose="true"
-    convertErrorsToExceptions="true"
-    convertNoticesToExceptions="true"
-    convertWarningsToExceptions="true"
-    processIsolation="false"
-    stopOnFailure="false">
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/8.2/phpunit.xsd"
+         bootstrap="tests/bootstrap.php"
+         backupGlobals="false"
+         backupStaticAttributes="false"
+         colors="true"
+         forceCoversAnnotation="false"
+         beStrictAboutCoversAnnotation="true"
+         beStrictAboutOutputDuringTests="true"
+         beStrictAboutTodoAnnotatedTests="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         processIsolation="false"
+         stopOnFailure="false"
+         verbose="true">
     <testsuites>
-        <testsuite name="Comodojo Test Suite - zip">
+        <testsuite name="comodojo-zip">
             <directory>tests/Comodojo/Zip/</directory>
         </testsuite>
     </testsuites>
+
     <filter>
-        <whitelist>
+        <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">src/Comodojo/Zip</directory>
         </whitelist>
     </filter>
