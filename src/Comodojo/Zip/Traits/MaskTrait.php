@@ -34,7 +34,7 @@ trait MaskTrait {
      *
      * @param int $mask Integer representation of the file mask
      *
-     * @return Zip
+     * @return ZipInterface
      */
     public function setMask(int $mask): ZipInterface {
 
