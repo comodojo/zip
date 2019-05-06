@@ -13,7 +13,7 @@ matrix:
 before_script:
   - composer update --prefer-stable
 
-script: ./vendor/bin/phpunit
+script: ./vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover
 
 after_script:
     - php vendor/bin/ocular code-coverage:upload --format=php-clover build/logs/clover.xml
