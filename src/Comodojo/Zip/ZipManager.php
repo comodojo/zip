@@ -104,7 +104,7 @@ class ZipManager implements Countable {
 
         return array_column(
             array_map(function($key, $archive) {
-                return [ "key" => $key, "file" => $archive->getZipFile() ];
+                return ["key" => $key, "file" => $archive->getZipFile()];
             }, array_keys($this->zip_archives), $this->zip_archives),
         "file", "key");
 
@@ -158,7 +158,7 @@ class ZipManager implements Countable {
 
         return array_column(
             array_map(function($key, $archive) {
-                return [ "key" => $key, "path" => $archive->getPath() ];
+                return ["key" => $key, "path" => $archive->getPath()];
             }, array_keys($this->zip_archives), $this->zip_archives),
         "path", "key");
 
@@ -194,7 +194,7 @@ class ZipManager implements Countable {
 
         return array_column(
             array_map(function($key, $archive) {
-                return [ "key" => $key, "mask" => $archive->getMask() ];
+                return ["key" => $key, "mask" => $archive->getMask()];
             }, array_keys($this->zip_archives), $this->zip_archives),
         "mask", "key");
 
@@ -211,7 +211,7 @@ class ZipManager implements Countable {
         try {
             return array_column(
                 array_map(function($key, $archive) {
-                    return [ "key" => $key, "files" => $archive->listFiles() ];
+                    return ["key" => $key, "files" => $archive->listFiles()];
                 }, array_keys($this->zip_archives), $this->zip_archives),
             "files", "key");
         } catch (ZipException $ze) {
