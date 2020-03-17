@@ -10,7 +10,7 @@ use \Comodojo\Zip\Traits\{
     ArchiveTrait,
     CommentTrait
 };
-use \Comodojo\Foundation\Validation\DataFilter;
+use \Comodojo\Zip\Foundation\Validation\DataFilter;
 use \Comodojo\Exception\ZipException;
 use \ZipArchive;
 use \DirectoryIterator;

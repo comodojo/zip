@@ -27,7 +27,7 @@
     },
     "require": {
         "php": ">=7.2",
-        "comodojo/foundation": "dev-master",
+        "comodojo/exceptions": "^1.1",
         "ext-zip": "*"
     },
     "require-dev": {

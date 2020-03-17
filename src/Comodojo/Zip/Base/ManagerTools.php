@@ -1,6 +1,6 @@
 <?php namespace Comodojo\Zip\Base;
 
-use \Comodojo\Foundation\Utils\UniqueId;
+use \Comodojo\Zip\Foundation\Utils\UniqueId;
 use \RecursiveIteratorIterator;
 use \RecursiveDirectoryIterator;
 use \FilesystemIterator;
