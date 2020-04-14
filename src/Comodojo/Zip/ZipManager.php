@@ -31,7 +31,7 @@ class ZipManager implements Countable {
      *
      * @var array
      */
-    private $zip_archives = [];
+    private array $zip_archives = [];
 
     /**
      * Count the number of Zip objects registered to the manager

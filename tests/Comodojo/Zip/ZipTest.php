@@ -113,11 +113,11 @@ class ZipTest extends AbstractTestCase {
 
         $zip = new Zip($name);
 
-        $zip->setSkipped("HIDDEN");
+        $zip->setSkipMode("HIDDEN");
 
         $this->assertInstanceOf('\Comodojo\Zip\Zip', $zip);
 
-        $skip_mode = $zip->getSkipped();
+        $skip_mode = $zip->getSkipMode();
 
         $this->assertSame("HIDDEN", $skip_mode);
 
@@ -225,7 +225,7 @@ class ZipTest extends AbstractTestCase {
 
         $zip = new Zip($name);
 
-        $zip->setSkipped("FOO");
+        $zip->setSkipMode("FOO");
 
     }
 

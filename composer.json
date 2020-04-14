@@ -26,12 +26,12 @@
          }
     },
     "require": {
-        "php": ">=7.2",
+        "php": ">=7.4",
         "comodojo/foundation": "dev-master",
         "ext-zip": "*"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.0",
+        "phpunit/phpunit": "^9.0",
         "scrutinizer/ocular": "^1.0"
     },
     "minimum-stability": "dev"

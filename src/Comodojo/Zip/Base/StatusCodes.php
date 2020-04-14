@@ -57,9 +57,9 @@ class StatusCodes {
     /**
      * Get status from zip status code
      *
-     * @param   int $code   ZIP status code
+     * @param int $code ZIP status code
      *
-     * @return  string
+     * @return string
      */
     public static function get(int $code): string {
 
