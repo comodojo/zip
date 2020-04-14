@@ -28,14 +28,14 @@ trait SkipTrait {
      *
      * @var string
      */
-    private string $skip_mode = 'NONE';
+    private $skip_mode = 'NONE';
 
     /**
      * Supported skip modes
      *
      * @var array
      */
-    private array $supported_skip_modes = ['NONE', 'HIDDEN', 'ALL', 'COMODOJO'];
+    private $supported_skip_modes = ['NONE', 'HIDDEN', 'ALL', 'COMODOJO'];
 
     /**
      * Set files to skip

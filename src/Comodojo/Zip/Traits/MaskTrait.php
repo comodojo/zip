@@ -27,7 +27,7 @@ trait MaskTrait {
      *
      * @var int
      */
-    private int $mask = 0777;
+    private $mask = 0777;
 
     /**
      * Set the mask of the extraction folder
