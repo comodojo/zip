@@ -28,37 +28,14 @@ trait SkipTrait {
      *
      * @var string
      */
-    private $skip_mode = 'NONE';
+    private string $skip_mode = 'NONE';
 
     /**
      * Supported skip modes
      *
      * @var array
      */
-    private $supported_skip_modes = ['NONE', 'HIDDEN', 'ALL', 'COMODOJO'];
-
-    /**
-     * Set files to skip
-     *
-     * Supported skip modes:
-     *  Zip::SKIP_NONE - skip no files
-     *  Zip::SKIP_HIDDEN - skip hidden files
-     *  Zip::SKIP_ALL - skip HIDDEN + COMODOJO ghost files
-     *  Zip::SKIP_COMODOJO - skip comodojo ghost files
-     *
-     * @param string $mode Skip file mode
-     *
-     * @return  ZipInterface
-     * @throws  ZipException
-     *
-     * @deprecated
-     * @see self::setSkipMode()
-     */
-    public function setSkipped(string $mode): ZipInterface {
-
-        return $this->setSkipMode($mode);
-
-    }
+    private array $supported_skip_modes = ['NONE', 'HIDDEN', 'ALL', 'COMODOJO'];
 
     /**
      * Set files to skip
@@ -87,21 +64,6 @@ trait SkipTrait {
         return $this;
 
     }
-
-    /**
-     * Get current skip mode
-     *
-     * @return string
-     *
-     * @deprecated
-     * @see self::getSkipMode()
-     */
-    public function getSkipped(): string {
-
-        return $this->getSkipMode();
-
-    }
-
 
     /**
      * Get current skip mode
