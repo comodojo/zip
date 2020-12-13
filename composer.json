@@ -34,5 +34,10 @@
         "phpunit/phpunit": "^9.0",
         "scrutinizer/ocular": "^1.8"
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "scripts": {
+        "test": "vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover",
+        "test-multi": "/usr/bin/bash test.sh",
+        "scrutinizer": "vendor/bin/ocular code-coverage:upload --format=php-clover coverage.clover"
+    }
 }
