@@ -30,7 +30,7 @@ trait PasswordTrait {
      *
      * @var string
      */
-    private $password;
+    private ?string $password = null;
 
     /**
      * Set zip password

@@ -48,7 +48,7 @@ class Zip implements ZipInterface, Countable {
      *
      * @var string
      */
-    private $zip_file;
+    private ?string $zip_file = null;
 
     /**
      * Class constructor

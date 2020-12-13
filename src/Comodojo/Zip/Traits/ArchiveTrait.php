@@ -28,7 +28,7 @@ trait ArchiveTrait {
      *
      * @var ZipArchive
      */
-    private $zip_archive;
+    private ?ZipArchive $zip_archive = null;
 
     /**
      * Set the current ZipArchive object

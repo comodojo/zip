@@ -28,7 +28,7 @@ trait PathTrait {
      *
      * @var string
      */
-    private $path;
+    private ?string $path = null;
 
     /**
      * Set current base path (to add relative files to zip archive)
