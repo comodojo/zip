@@ -1,4 +1,4 @@
-name: comodojo-zip-actions
+name: build
 
 on:
   push:
