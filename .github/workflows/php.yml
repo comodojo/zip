@@ -7,11 +7,43 @@ on:
     branches: [ master ]
 
 jobs:
+  run:
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      matrix:
+        operating-system: [ubuntu-latest, windows-latest, macos-latest]
+        php-versions: ['5.6', '7.0', '7.1', '7.2', '7.3', '7.4']
+    name: PHP ${{ matrix.php-versions }} Test on ${{ matrix.operating-system }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-versions }}
+        extensions: mbstring, intl
+        ini-values: post_max_size=256M, max_execution_time=180
+        coverage: xdebug        
+        tools: php-cs-fixer, phpunit
+
+jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-versions: ['7.4','8.0']
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-versions }}
+        extensions: mbstring, intl, zip
+        coverage: xdebug        
 
     - name: Validate composer.json and composer.lock
       run: composer validate
@@ -31,3 +63,6 @@ jobs:
 
     - name: Run test suite
       run: composer run-script test
+
+    - name: Upload to scrutinizer
+      run: composer run-script scrutinizer
