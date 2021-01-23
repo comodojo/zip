@@ -12,4 +12,4 @@ First `install composer`_, then:
 Requirements
 ************
 
-To work properly, comodojo/zip requires PHP >=7.2.0.
+To work properly, comodojo/zip requires PHP >=7.4.0.

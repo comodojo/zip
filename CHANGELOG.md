@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 3.1.0
+> released 23 Jan 2021
+
+* Support PHP >= 7.4|8
+* Add test-in-docker and vscode .devcontainer support
+* Update docs
+* Move from travis to github action
+> So long, travis.ci, and thanks for all the fish! 
+
 ## 3.0.0
 > released 06 May 2019
 
