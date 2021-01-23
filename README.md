@@ -4,8 +4,6 @@
 
 PHP ZipArchive toolbox
 
-***This is the development branch, please do not use it in production***
-
 This library simplifies and automates zip files management using [PHP ZipArchive](http://php.net/manual/en/class.ziparchive.php). It includes the `\Comodojo\Zip\ZipManager` class to manage multiple Zip files at once (extract, add, remove, merge).
 
 ## Installation
@@ -27,6 +25,6 @@ Contributions are welcome and will be fully credited. Please see [CONTRIBUTING](
 
 `` comodojo/zip `` is released under the MIT License (MIT). Please see [License File](LICENSE) for more information.
 
-> Copyright (c) 2019 Marco Giovinazzi
+> Copyright (c) 2021 Marco Giovinazzi
 >
 > For more information, visit [comodojo.org](https://comodojo.org).

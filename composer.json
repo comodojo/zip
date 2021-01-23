@@ -27,14 +27,13 @@
     },
     "require": {
         "php": ">=7.4",
-        "comodojo/foundation": "dev-master",
+        "comodojo/foundation": "^1.0",
         "ext-zip": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.0",
         "scrutinizer/ocular": "^1.8"
     },
-    "minimum-stability": "dev",
     "scripts": {
         "test": "vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover",
         "test-multi": "/usr/bin/bash test.sh",
