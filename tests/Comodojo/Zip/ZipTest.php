@@ -1,4 +1,6 @@
-<?php namespace Comodojo\Zip\Tests;
+<?php declare(strict_types=1);
+
+namespace Comodojo\Zip\Tests;
 
 use \Comodojo\Zip\Zip;
 

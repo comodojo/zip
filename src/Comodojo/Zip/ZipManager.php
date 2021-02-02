@@ -2,6 +2,7 @@
 
 namespace Comodojo\Zip;
 
+use \Comodojo\Zip\Interfaces\ZipInterface;
 use \Comodojo\Zip\Base\ManagerTools;
 use \Comodojo\Foundation\Utils\UniqueId;
 use \Comodojo\Exception\ZipException;
@@ -53,7 +54,7 @@ class ZipManager implements Countable
      *
      * @return string
      */
-    public function addZip(Zip $zip): string
+    public function addZip(ZipInterface $zip): string
     {
         $id = UniqueId::generate(32);
         $this->zip_archives[$id] = $zip;
@@ -68,7 +69,7 @@ class ZipManager implements Countable
      * @return bool
      * @throws ZipException
      */
-    public function removeZip(Zip $zip): bool
+    public function removeZip(ZipInterface $zip): bool
     {
         $archive_key = array_search($zip, $this->zip_archives, true);
         if ($archive_key === false) {
@@ -120,7 +121,7 @@ class ZipManager implements Countable
      * @return Zip
      * @throws ZipException
      */
-    public function getZip(string $id): Zip
+    public function getZip(string $id): ZipInterface
     {
         if (array_key_exists($id, $this->zip_archives) === false) {
             throw new ZipException("Archive id $id not found");

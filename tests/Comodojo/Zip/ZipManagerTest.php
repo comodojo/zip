@@ -1,4 +1,6 @@
-<?php namespace Comodojo\Zip\Tests;
+<?php declare(strict_types=1);
+
+namespace Comodojo\Zip\Tests;
 
 use \Comodojo\Zip\Zip;
 use \Comodojo\Zip\ZipManager;
@@ -156,7 +158,7 @@ class ZipManagerTest extends AbstractTestCase {
 
         $manager = new ZipManager();
 
-        $manager->getZip(123456);
+        $manager->getZip("123456");
 
     }
 
