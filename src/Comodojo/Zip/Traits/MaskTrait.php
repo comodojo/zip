@@ -1,4 +1,6 @@
-<?php namespace Comodojo\Zip\Traits;
+<?php
+
+namespace Comodojo\Zip\Traits;
 
 use \Comodojo\Zip\Interfaces\ZipInterface;
 
@@ -20,7 +22,8 @@ use \Comodojo\Zip\Interfaces\ZipInterface;
  * THE SOFTWARE.
  */
 
-trait MaskTrait {
+trait MaskTrait
+{
 
     /**
      * Mask for the extraction folder (if it should be created)
@@ -36,8 +39,8 @@ trait MaskTrait {
      *
      * @return ZipInterface
      */
-    public function setMask(int $mask): ZipInterface {
-
+    public function setMask(int $mask): ZipInterface
+    {
         $mask = filter_var($mask, FILTER_VALIDATE_INT, [
             "options" => [
                 "max_range" => 0777,
@@ -48,7 +51,6 @@ trait MaskTrait {
         $this->mask = $mask;
 
         return $this;
-
     }
 
     /**
@@ -56,10 +58,8 @@ trait MaskTrait {
      *
      * @return int
      */
-    public function getMask(): int {
-
+    public function getMask(): int
+    {
         return $this->mask;
-
     }
-
 }

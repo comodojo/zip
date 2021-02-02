@@ -1,4 +1,6 @@
-<?php namespace Comodojo\Zip\Traits;
+<?php
+
+namespace Comodojo\Zip\Traits;
 
 use \Comodojo\Zip\Interfaces\ZipInterface;
 use \ZipArchive;
@@ -21,7 +23,8 @@ use \ZipArchive;
  * THE SOFTWARE.
  */
 
-trait ArchiveTrait {
+trait ArchiveTrait
+{
 
     /**
      * ZipArchive internal pointer
@@ -37,12 +40,10 @@ trait ArchiveTrait {
      *
      * @return ZipInterface
      */
-    public function setArchive(ZipArchive $zip): ZipInterface {
-
+    public function setArchive(ZipArchive $zip): ZipInterface
+    {
         $this->zip_archive = $zip;
-
         return $this;
-
     }
 
     /**
@@ -50,10 +51,8 @@ trait ArchiveTrait {
      *
      * @return ZipArchive|null
      */
-    public function getArchive(): ?ZipArchive {
-
+    public function getArchive(): ?ZipArchive
+    {
         return $this->zip_archive;
-
     }
-
 }

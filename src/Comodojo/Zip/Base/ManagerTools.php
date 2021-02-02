@@ -1,4 +1,6 @@
-<?php namespace Comodojo\Zip\Base;
+<?php
+
+namespace Comodojo\Zip\Base;
 
 use \Comodojo\Foundation\Utils\UniqueId;
 use \RecursiveIteratorIterator;
@@ -24,17 +26,17 @@ use \Exception;
  * THE SOFTWARE.
  */
 
-class ManagerTools {
+class ManagerTools
+{
 
     /**
      * Get a temporary folder name (random)
      *
      * @return string
      */
-    public static function getTemporaryFolder(): string {
-
-        return "zip-temp-folder-".UniqueId::generate();
-
+    public static function getTemporaryFolder(): string
+    {
+        return "zip-temp-folder-" . UniqueId::generate();
     }
 
     /**
@@ -45,47 +47,37 @@ class ManagerTools {
      * @return bool
      * @throws Exception
      */
-    public static function recursiveUnlink(string $folder, bool $remove_folder = true): bool {
-
-        try {
-
-            self::emptyFolder($folder);
-            if ( $remove_folder && rmdir($folder) === false ) {
-                throw new Exception("Error deleting folder: $folder");
-            }
-            return true;
-
-        } catch (Exception $e) {
-            throw $e;
+    public static function recursiveUnlink(string $folder, bool $remove_folder = true): bool
+    {
+        self::emptyFolder($folder);
+        if ($remove_folder && rmdir($folder) === false) {
+            throw new Exception("Error deleting folder: $folder");
         }
-
+        return true;
     }
 
-    protected static function emptyFolder(string $folder): bool {
-
+    protected static function emptyFolder(string $folder): bool
+    {
         $iterator = new RecursiveIteratorIterator(
             new RecursiveDirectoryIterator($folder, FilesystemIterator::SKIP_DOTS),
             RecursiveIteratorIterator::CHILD_FIRST
         );
 
-        foreach ( $iterator as $path ) {
+        foreach ($iterator as $path) {
 
             $pathname = $path->getPathname();
 
-            if ( $path->isDir() ) {
+            if ($path->isDir()) {
                 $action = rmdir($pathname);
             } else {
                 $action = unlink($pathname);
             }
 
-            if ( $action === false ) {
+            if ($action === false) {
                 throw new Exception("Error deleting $pathname during recursive unlink of folder: $folder");
             }
-
         }
 
         return true;
-
     }
-
 }

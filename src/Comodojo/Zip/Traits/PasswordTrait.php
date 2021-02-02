@@ -1,4 +1,6 @@
-<?php namespace Comodojo\Zip\Traits;
+<?php
+
+namespace Comodojo\Zip\Traits;
 
 use \Comodojo\Zip\Interfaces\ZipInterface;
 use \ZipArchive;
@@ -21,7 +23,8 @@ use \ZipArchive;
  * THE SOFTWARE.
  */
 
-trait PasswordTrait {
+trait PasswordTrait
+{
 
     abstract public function getArchive(): ?ZipArchive;
 
@@ -39,13 +42,12 @@ trait PasswordTrait {
      *
      * @return ZipInterface
      */
-    public function setPassword(string $password): ZipInterface {
-
+    public function setPassword(string $password): ZipInterface
+    {
         $this->password = $password;
         $this->getArchive()->setPassword($password);
 
         return $this;
-
     }
 
     /**
@@ -53,10 +55,8 @@ trait PasswordTrait {
      *
      * @return string
      */
-    protected function getPassword(): ?string {
-
+    protected function getPassword(): ?string
+    {
         return $this->password;
-
     }
-
 }

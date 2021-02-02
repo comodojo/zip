@@ -1,4 +1,6 @@
-<?php namespace Comodojo\Zip\Interfaces;
+<?php
+
+namespace Comodojo\Zip\Interfaces;
 
 use \Comodojo\Exception\ZipException;
 use \ZipArchive;
@@ -21,7 +23,8 @@ use \ZipArchive;
  * THE SOFTWARE.
  */
 
-interface ZipInterface {
+interface ZipInterface
+{
 
     public const SKIP_NONE = 'NONE';
 
@@ -133,5 +136,4 @@ interface ZipInterface {
      * @throws ZipException
      */
     public function close(): bool;
-
 }

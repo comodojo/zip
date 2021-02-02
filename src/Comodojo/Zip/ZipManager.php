@@ -1,4 +1,6 @@
-<?php namespace Comodojo\Zip;
+<?php
+
+namespace Comodojo\Zip;
 
 use \Comodojo\Zip\Base\ManagerTools;
 use \Comodojo\Foundation\Utils\UniqueId;
@@ -24,7 +26,8 @@ use \Exception;
  * THE SOFTWARE.
  */
 
-class ZipManager implements Countable {
+class ZipManager implements Countable
+{
 
     /**
      * Array of managed zip files
@@ -38,7 +41,8 @@ class ZipManager implements Countable {
      *
      * @return int
      */
-    public function count(): int {
+    public function count(): int
+    {
         return count($this->zip_archives);
     }
 
@@ -49,12 +53,11 @@ class ZipManager implements Countable {
      *
      * @return string
      */
-    public function addZip(Zip $zip): string {
-
+    public function addZip(Zip $zip): string
+    {
         $id = UniqueId::generate(32);
         $this->zip_archives[$id] = $zip;
         return $id;
-
     }
 
     /**
@@ -65,16 +68,15 @@ class ZipManager implements Countable {
      * @return bool
      * @throws ZipException
      */
-    public function removeZip(Zip $zip): bool {
-
+    public function removeZip(Zip $zip): bool
+    {
         $archive_key = array_search($zip, $this->zip_archives, true);
-        if ( $archive_key === false ) {
+        if ($archive_key === false) {
             throw new ZipException("Archive not found");
         }
 
         unset($this->zip_archives[$archive_key]);
         return true;
-
     }
 
     /**
@@ -85,14 +87,13 @@ class ZipManager implements Countable {
      * @return bool
      * @throws ZipException
      */
-    public function removeZipById(string $id): bool {
-
-        if ( isset($this->zip_archives[$id]) === false ) {
+    public function removeZipById(string $id): bool
+    {
+        if (isset($this->zip_archives[$id]) === false) {
             throw new ZipException("Archive: $id not found");
         }
         unset($this->zip_archives[$id]);
         return true;
-
     }
 
     /**
@@ -100,14 +101,15 @@ class ZipManager implements Countable {
      *
      * @return array
      */
-    public function listZips(): array {
-
+    public function listZips(): array
+    {
         return array_column(
-            array_map(function($key, $archive) {
+            array_map(function ($key, $archive) {
                 return ["key" => $key, "file" => $archive->getZipFile()];
             }, array_keys($this->zip_archives), $this->zip_archives),
-        "file", "key");
-
+            "file",
+            "key"
+        );
     }
 
     /**
@@ -118,13 +120,12 @@ class ZipManager implements Countable {
      * @return Zip
      * @throws ZipException
      */
-    public function getZip(string $id): Zip {
-
-        if ( array_key_exists($id, $this->zip_archives) === false ) {
+    public function getZip(string $id): Zip
+    {
+        if (array_key_exists($id, $this->zip_archives) === false) {
             throw new ZipException("Archive id $id not found");
         }
         return $this->zip_archives[$id];
-
     }
 
     /**
@@ -136,17 +137,12 @@ class ZipManager implements Countable {
      * @return ZipManager
      * @throws ZipException
      */
-    public function setPath(string $path): ZipManager {
-
-        try {
-            foreach ( $this->zip_archives as $archive ) {
-                $archive->setPath($path);
-            }
-            return $this;
-        } catch (ZipException $ze) {
-            throw $ze;
+    public function setPath(string $path): ZipManager
+    {
+        foreach ($this->zip_archives as $archive) {
+            $archive->setPath($path);
         }
-
+        return $this;
     }
 
     /**
@@ -154,14 +150,15 @@ class ZipManager implements Countable {
      *
      * @return  array
      */
-    public function getPath(): array {
-
+    public function getPath(): array
+    {
         return array_column(
-            array_map(function($key, $archive) {
+            array_map(function ($key, $archive) {
                 return ["key" => $key, "path" => $archive->getPath()];
             }, array_keys($this->zip_archives), $this->zip_archives),
-        "path", "key");
-
+            "path",
+            "key"
+        );
     }
 
     /**
@@ -172,17 +169,12 @@ class ZipManager implements Countable {
      * @return ZipManager
      * @throws ZipException
      */
-    public function setMask(int $mask): ZipManager {
-
-        try {
-            foreach ( $this->zip_archives as $archive ) {
-                $archive->setMask($mask);
-            }
-            return $this;
-        } catch (ZipException $ze) {
-            throw $ze;
+    public function setMask(int $mask): ZipManager
+    {
+        foreach ($this->zip_archives as $archive) {
+            $archive->setMask($mask);
         }
-
+        return $this;
     }
 
     /**
@@ -190,14 +182,15 @@ class ZipManager implements Countable {
      *
      * @return array
      */
-    public function getMask(): array {
-
+    public function getMask(): array
+    {
         return array_column(
-            array_map(function($key, $archive) {
+            array_map(function ($key, $archive) {
                 return ["key" => $key, "mask" => $archive->getMask()];
             }, array_keys($this->zip_archives), $this->zip_archives),
-        "mask", "key");
-
+            "mask",
+            "key"
+        );
     }
 
     /**
@@ -206,18 +199,15 @@ class ZipManager implements Countable {
      * @return array
      * @throws ZipException
      */
-    public function listFiles(): array {
-
-        try {
-            return array_column(
-                array_map(function($key, $archive) {
-                    return ["key" => $key, "files" => $archive->listFiles()];
-                }, array_keys($this->zip_archives), $this->zip_archives),
-            "files", "key");
-        } catch (ZipException $ze) {
-            throw $ze;
-        }
-
+    public function listFiles(): array
+    {
+        return array_column(
+            array_map(function ($key, $archive) {
+                return ["key" => $key, "files" => $archive->listFiles()];
+            }, array_keys($this->zip_archives), $this->zip_archives),
+            "files",
+            "key"
+        );
     }
 
     /**
@@ -236,21 +226,15 @@ class ZipManager implements Countable {
         $files = null
     ): bool {
 
-        try {
-            foreach ( $this->zip_archives as $archive ) {
+        foreach ($this->zip_archives as $archive) {
 
-                $local_path = substr($destination, -1) == '/' ? $destination : $destination.'/';
-                $local_file = pathinfo($archive->getZipFile());
-                $local_destination = $separate ? ($local_path.$local_file['filename']) : $destination;
+            $local_path = substr($destination, -1) == '/' ? $destination : $destination . '/';
+            $local_file = pathinfo($archive->getZipFile());
+            $local_destination = $separate ? ($local_path . $local_file['filename']) : $destination;
 
-                $archive->extract($local_destination, $files);
-
-            }
-            return true;
-        } catch (ZipException $ze) {
-            throw $ze;
+            $archive->extract($local_destination, $files);
         }
-
+        return true;
     }
 
     /**
@@ -264,25 +248,16 @@ class ZipManager implements Countable {
      * @return bool
      * @throws ZipException
      */
-    public function merge(string $output_zip_file, bool $separate = true): bool {
-
+    public function merge(string $output_zip_file, bool $separate = true): bool
+    {
         $pathinfo = pathinfo($output_zip_file);
-        $temporary_folder = $pathinfo['dirname']."/".ManagerTools::getTemporaryFolder();
+        $temporary_folder = $pathinfo['dirname'] . "/" . ManagerTools::getTemporaryFolder();
 
-        try {
-
-            $this->extract($temporary_folder, $separate);
-            $zip = Zip::create($output_zip_file);
-            $zip->add($temporary_folder, true)->close();
-            ManagerTools::recursiveUnlink($temporary_folder);
-            return true;
-
-        } catch (ZipException $ze) {
-            throw $ze;
-        } catch (Exception $e) {
-            throw $e;
-        }
-
+        $this->extract($temporary_folder, $separate);
+        $zip = Zip::create($output_zip_file);
+        $zip->add($temporary_folder, true)->close();
+        ManagerTools::recursiveUnlink($temporary_folder);
+        return true;
     }
 
     /**
@@ -296,19 +271,12 @@ class ZipManager implements Countable {
      * @return ZipManager
      * @throws ZipException
      */
-    public function add($file_name_or_array, bool $flatten_root_folder = false): ZipManager {
-
-        try {
-
-            foreach ( $this->zip_archives as $archive ) {
-                $archive->add($file_name_or_array, $flatten_root_folder);
-            }
-            return $this;
-
-        } catch (ZipException $ze) {
-            throw $ze;
+    public function add($file_name_or_array, bool $flatten_root_folder = false): ZipManager
+    {
+        foreach ($this->zip_archives as $archive) {
+            $archive->add($file_name_or_array, $flatten_root_folder);
         }
-
+        return $this;
     }
 
     /**
@@ -320,19 +288,12 @@ class ZipManager implements Countable {
      * @return ZipManager
      * @throws ZipException
      */
-    public function delete($file_name_or_array): ZipManager {
-
-        try {
-
-            foreach ( $this->zip_archives as $archive ) {
-                $archive->delete($file_name_or_array);
-            }
-            return $this;
-
-        } catch (ZipException $ze) {
-            throw $ze;
+    public function delete($file_name_or_array): ZipManager
+    {
+        foreach ($this->zip_archives as $archive) {
+            $archive->delete($file_name_or_array);
         }
-
+        return $this;
     }
 
     /**
@@ -341,17 +302,11 @@ class ZipManager implements Countable {
      * @return bool
      * @throws ZipException
      */
-    public function close(): bool {
-
-        try {
-            foreach ( $this->zip_archives as $archive ) {
-                $archive->close();
-            }
-            return true;
-        } catch (ZipException $ze) {
-            throw $ze;
+    public function close(): bool
+    {
+        foreach ($this->zip_archives as $archive) {
+            $archive->close();
         }
-
+        return true;
     }
-
 }
