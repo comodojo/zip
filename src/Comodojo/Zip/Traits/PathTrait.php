@@ -1,4 +1,6 @@
-<?php namespace Comodojo\Zip\Traits;
+<?php
+
+namespace Comodojo\Zip\Traits;
 
 use \Comodojo\Zip\Interfaces\ZipInterface;
 use \Comodojo\Exception\ZipException;
@@ -21,7 +23,8 @@ use \Comodojo\Exception\ZipException;
  * THE SOFTWARE.
  */
 
-trait PathTrait {
+trait PathTrait
+{
 
     /**
      * Current base path
@@ -38,18 +41,17 @@ trait PathTrait {
      * @return ZipInterface
      * @throws ZipException
      */
-    public function setPath(?string $path = null): ZipInterface {
-
-        if ( $path === null ) {
+    public function setPath(?string $path = null): ZipInterface
+    {
+        if ($path === null) {
             $this->path = null;
-        } else if ( !file_exists($path) ) {
+        } else if (!file_exists($path)) {
             throw new ZipException("Not existent path: $path");
         } else {
             $this->path = $path;
         }
 
         return $this;
-
     }
 
     /**
@@ -57,10 +59,8 @@ trait PathTrait {
      *
      * @return string|null
      */
-    public function getPath(): ?string {
-
+    public function getPath(): ?string
+    {
         return $this->path;
-
     }
-
 }

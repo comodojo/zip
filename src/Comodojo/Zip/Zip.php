@@ -1,4 +1,6 @@
-<?php namespace Comodojo\Zip;
+<?php
+
+namespace Comodojo\Zip;
 
 use \Comodojo\Zip\Interfaces\ZipInterface;
 use \Comodojo\Zip\Base\StatusCodes;
@@ -34,7 +36,8 @@ use \Countable;
  * THE SOFTWARE.
  */
 
-class Zip implements ZipInterface, Countable {
+class Zip implements ZipInterface, Countable
+{
 
     use SkipTrait;
     use MaskTrait;
@@ -57,82 +60,60 @@ class Zip implements ZipInterface, Countable {
      *
      * @throws ZipException
      */
-    public function __construct(string $zip_file) {
-
-        if ( empty($zip_file) ) {
+    public function __construct(string $zip_file)
+    {
+        if (empty($zip_file)) {
             throw new ZipException(StatusCodes::get(ZipArchive::ER_NOENT));
         }
 
         $this->zip_file = $zip_file;
-
     }
 
     /**
      * {@inheritdoc}
      */
-    public static function open(string $zip_file): ZipInterface {
-
-        try {
-
-            $zip = new Zip($zip_file);
-            $zip->setArchive(self::openZipFile($zip_file));
-
-        } catch (ZipException $ze) {
-            throw $ze;
-        }
+    public static function open(string $zip_file): ZipInterface
+    {
+        $zip = new Zip($zip_file);
+        $zip->setArchive(self::openZipFile($zip_file));
 
         return $zip;
-
     }
 
     /**
      * {@inheritdoc}
      */
-    public static function check(string $zip_file): bool {
-
-        try {
-
-            $zip = self::openZipFile($zip_file, ZipArchive::CHECKCONS);
-            $zip->close();
-
-        } catch (ZipException $ze) {
-            throw $ze;
-        }
+    public static function check(string $zip_file): bool
+    {
+        $zip = self::openZipFile($zip_file, ZipArchive::CHECKCONS);
+        $zip->close();
 
         return true;
-
     }
 
     /**
      * {@inheritdoc}
      */
-    public static function create(string $zip_file, bool $overwrite = false): ZipInterface {
-
+    public static function create(string $zip_file, bool $overwrite = false): ZipInterface
+    {
         $overwrite = DataFilter::filterBoolean($overwrite);
 
-        try {
+        $zip = new Zip($zip_file);
 
-            $zip = new Zip($zip_file);
-
-            if ( $overwrite ) {
-                $zip->setArchive(
-                    self::openZipFile(
-                        $zip_file,
-                        ZipArchive::CREATE | ZipArchive::OVERWRITE
-                    )
-                );
-            } else {
-                $zip->setArchive(
-                    self::openZipFile($zip_file, ZipArchive::CREATE)
-                );
-            }
-
-        } catch (ZipException $ze) {
-            throw $ze;
+        if ($overwrite) {
+            $zip->setArchive(
+                self::openZipFile(
+                    $zip_file,
+                    ZipArchive::CREATE | ZipArchive::OVERWRITE
+                )
+            );
+        } else {
+            $zip->setArchive(
+                self::openZipFile($zip_file, ZipArchive::CREATE)
+            );
         }
 
         return $zip;
-
     }
 
     /**
@@ -140,8 +121,12 @@ class Zip implements ZipInterface, Countable {
      *
      * @return int
      */
-    public function count(): int {
-        return count(/** @scrutinizer ignore-type */ $this->getArchive());
+    public function count(): int
+    {
+        return count(
+            /** @scrutinizer ignore-type */
+            $this->getArchive()
+        );
     }
 
     /**
@@ -149,70 +134,64 @@ class Zip implements ZipInterface, Countable {
      *
      * @return string
      */
-    public function getZipFile(): string {
-
+    public function getZipFile(): string
+    {
         return $this->zip_file;
-
     }
 
     /**
      * {@inheritdoc}
      */
-    public function listFiles(): array {
-
+    public function listFiles(): array
+    {
         $list = [];
 
-        for ( $i = 0; $i < $this->getArchive()->numFiles; $i++ ) {
+        for ($i = 0; $i < $this->getArchive()->numFiles; $i++) {
 
             $name = $this->getArchive()->getNameIndex($i);
-            if ( $name === false ) {
+            if ($name === false) {
                 throw new ZipException(StatusCodes::get($this->getArchive()->status));
             }
             $list[] = $name;
-
         }
 
         return $list;
-
     }
 
     /**
      * {@inheritdoc}
      */
-    public function extract(string $destination, $files = null): bool {
-
-        if ( empty($destination) ) {
+    public function extract(string $destination, $files = null): bool
+    {
+        if (empty($destination)) {
             throw new ZipException("Invalid destination path: $destination");
         }
 
-        if ( !file_exists($destination) ) {
-
+        if (!file_exists($destination)) {
             $omask = umask(0);
             $action = mkdir($destination, $this->getMask(), true);
             umask($omask);
 
-            if ( $action === false ) {
+            if ($action === false) {
                 throw new ZipException("Error creating folder: $destination");
             }
-
         }
 
-        if ( !is_writable($destination) ) {
+        if (!is_writable($destination)) {
             throw new ZipException("Destination path $destination not writable");
         }
 
-        if ( is_array($files) && @sizeof($files) != 0 ) {
+        if (is_array($files) && @sizeof($files) != 0) {
             $file_matrix = $files;
         } else {
             $file_matrix = $this->getArchiveFiles();
         }
 
-        if ( $this->getArchive()->extractTo($destination, $file_matrix) === false ) {
+        if ($this->getArchive()->extractTo($destination, $file_matrix) === false) {
             throw new ZipException(StatusCodes::get($this->getArchive()->status));
         }
 
         return true;
-
     }
 
     /**
@@ -225,72 +204,57 @@ class Zip implements ZipInterface, Countable {
         int $encryption = self::EM_NONE
     ): ZipInterface {
 
-        if ( empty($file_name_or_array) ) {
+        if (empty($file_name_or_array)) {
             throw new ZipException(StatusCodes::get(ZipArchive::ER_NOENT));
         }
 
-        if ( $encryption !== self::EM_NONE && $this->getPassword() === null ) {
+        if ($encryption !== self::EM_NONE && $this->getPassword() === null) {
             throw new ZipException("Cannot encrypt resource: no password set");
         }
 
         $flatten_root_folder = DataFilter::filterBoolean($flatten_root_folder);
 
-        try {
-
-            if ( is_array($file_name_or_array) ) {
-                foreach ( $file_name_or_array as $file_name ) {
-                    $this->addItem($file_name, $flatten_root_folder, $compression, $encryption);
-                }
-            } else {
-                $this->addItem($file_name_or_array, $flatten_root_folder, $compression, $encryption);
+        if (is_array($file_name_or_array)) {
+            foreach ($file_name_or_array as $file_name) {
+                $this->addItem($file_name, $flatten_root_folder, $compression, $encryption);
             }
-
-        } catch (ZipException $ze) {
-            throw $ze;
+        } else {
+            $this->addItem($file_name_or_array, $flatten_root_folder, $compression, $encryption);
         }
 
         return $this;
-
     }
 
     /**
      * {@inheritdoc}
      */
-    public function delete($file_name_or_array): ZipInterface {
-
-        if ( empty($file_name_or_array) ) {
+    public function delete($file_name_or_array): ZipInterface
+    {
+        if (empty($file_name_or_array)) {
             throw new ZipException(StatusCodes::get(ZipArchive::ER_NOENT));
         }
 
-        try {
-
-            if ( is_array($file_name_or_array) ) {
-                foreach ( $file_name_or_array as $file_name ) {
-                    $this->deleteItem($file_name);
-                }
-            } else {
-                $this->deleteItem($file_name_or_array);
+        if (is_array($file_name_or_array)) {
+            foreach ($file_name_or_array as $file_name) {
+                $this->deleteItem($file_name);
             }
-
-        } catch (ZipException $ze) {
-            throw $ze;
+        } else {
+            $this->deleteItem($file_name_or_array);
         }
 
         return $this;
-
     }
 
     /**
      * {@inheritdoc}
      */
-    public function close(): bool {
-
-        if ( $this->getArchive()->close() === false ) {
+    public function close(): bool
+    {
+        if ($this->getArchive()->close() === false) {
             throw new ZipException(StatusCodes::get($this->getArchive()->status));
         }
 
         return true;
-
     }
 
     /**
@@ -298,38 +262,32 @@ class Zip implements ZipInterface, Countable {
      *
      * @return array
      */
-    private function getArchiveFiles(): array {
-
+    private function getArchiveFiles(): array
+    {
         $list = [];
 
-        for ( $i = 0; $i < $this->getArchive()->numFiles; $i++ ) {
+        for ($i = 0; $i < $this->getArchive()->numFiles; $i++) {
 
             $file = $this->getArchive()->statIndex($i);
-            if ( $file === false ) {
+            if ($file === false) {
                 continue;
             }
 
             $name = str_replace('\\', '/', $file['name']);
             if (
-                (
-                    $name[0] == "." &&
-                    in_array($this->getSkipMode(), ["HIDDEN", "ALL"])
-                ) ||
-                (
-                    $name[0] == "." &&
+                ($name[0] == "." &&
+                    in_array($this->getSkipMode(), ["HIDDEN", "ALL"])) ||
+                ($name[0] == "." &&
                     @$name[1] == "_" &&
-                    in_array($this->getSkipMode(), ["COMODOJO", "ALL"])
-                )
+                    in_array($this->getSkipMode(), ["COMODOJO", "ALL"]))
             ) {
                 continue;
             }
 
             $list[] = $name;
-
         }
 
         return $list;
-
     }
 
     /**
@@ -349,33 +307,27 @@ class Zip implements ZipInterface, Countable {
         ?string $base = null
     ): void {
 
-        $file = is_null($this->getPath()) ? $file : $this->getPath()."/$file";
+        $file = is_null($this->getPath()) ? $file : $this->getPath() . "/$file";
         $real_file = str_replace('\\', '/', realpath($file));
         $real_name = basename($real_file);
 
         if (
             $base !== null &&
             (
-                (
-                    $real_name[0] == "." &&
-                    in_array($this->getSkipMode(), ["HIDDEN", "ALL"])
-                ) ||
-                (
-                    $real_name[0] == "." &&
+                ($real_name[0] == "." &&
+                    in_array($this->getSkipMode(), ["HIDDEN", "ALL"])) ||
+                ($real_name[0] == "." &&
                     @$real_name[1] == "_" &&
-                    in_array($this->getSkipMode(), ["COMODOJO", "ALL"])
-                )
-            )
+                    in_array($this->getSkipMode(), ["COMODOJO", "ALL"])))
         ) {
             return;
         }
 
-        if ( is_dir($real_file) ) {
+        if (is_dir($real_file)) {
             $this->addDirectoryItem($real_file, $real_name, $compression, $encryption, $base, $flatroot);
         } else {
             $this->addFileItem($real_file, $real_name, $compression, $encryption, $base);
         }
-
     }
 
     private function addFileItem(
@@ -386,7 +338,7 @@ class Zip implements ZipInterface, Countable {
         ?string $base = null
     ): void {
 
-        $file_target = is_null($base) ? $real_name : $base.$real_name;
+        $file_target = is_null($base) ? $real_name : $base . $real_name;
         if (
             $this->getArchive()->addFile($real_file, $file_target) === false ||
             $this->getArchive()->setCompressionName($file_target, $compression) === false ||
@@ -394,7 +346,6 @@ class Zip implements ZipInterface, Countable {
         ) {
             throw new ZipException(StatusCodes::get($this->getArchive()->status));
         }
-
     }
 
     private function addDirectoryItem(
@@ -406,36 +357,30 @@ class Zip implements ZipInterface, Countable {
         bool $flatroot = false
     ): void {
 
-        if ( !$flatroot ) {
-            $folder_target = $base.$real_name;
+        if (!$flatroot) {
+            $folder_target = $base . $real_name;
             $new_base = "$folder_target/";
-            if ( $this->getArchive()->addEmptyDir($folder_target) === false ) {
+            if ($this->getArchive()->addEmptyDir($folder_target) === false) {
                 throw new ZipException(StatusCodes::get($this->getArchive()->status));
             }
         } else {
             $new_base = null;
         }
 
-        foreach ( new DirectoryIterator($real_file) as $path ) {
-
-            if ( $path->isDot() ) {
+        foreach (new DirectoryIterator($real_file) as $path) {
+            
+            if ($path->isDot()) {
                 continue;
             }
 
-            try {
-                $this->addItem(
-                    $path->getPathname(),
-                    false,
-                    $compression,
-                    $encryption,
-                    $new_base
-                );
-            } catch (ZipException $ze) {
-                throw $ze;
-            }
-
+            $this->addItem(
+                $path->getPathname(),
+                false,
+                $compression,
+                $encryption,
+                $new_base
+            );
         }
-
     }
 
     /**
@@ -445,12 +390,11 @@ class Zip implements ZipInterface, Countable {
      * @return void
      * @throws ZipException
      */
-    private function deleteItem(string $file): void {
-
-        if ( $this->getArchive()->deleteName($file) === false ) {
+    private function deleteItem(string $file): void
+    {
+        if ($this->getArchive()->deleteName($file) === false) {
             throw new ZipException(StatusCodes::get($this->getArchive()->status));
         }
-
     }
 
     /**
@@ -462,17 +406,15 @@ class Zip implements ZipInterface, Countable {
      * @return  ZipArchive
      * @throws  ZipException
      */
-    private static function openZipFile(string $zip_file, int $flags = null): ZipArchive {
-
+    private static function openZipFile(string $zip_file, int $flags = null): ZipArchive
+    {
         $zip = new ZipArchive();
 
         $open = $zip->open($zip_file, $flags);
-        if ( $open !== true ) {
+        if ($open !== true) {
             throw new ZipException(StatusCodes::get($open));
         }
 
         return $zip;
-
     }
-
 }

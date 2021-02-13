@@ -1,4 +1,6 @@
-<?php namespace Comodojo\Zip\Base;
+<?php
+
+namespace Comodojo\Zip\Base;
 
 use \ZipArchive;
 
@@ -20,7 +22,8 @@ use \ZipArchive;
  * THE SOFTWARE.
  */
 
-class StatusCodes {
+class StatusCodes
+{
 
     /**
      * Array of well known zip status codes
@@ -61,12 +64,12 @@ class StatusCodes {
      *
      * @return string
      */
-    public static function get(int $code): string {
+    public static function get(int $code): string
+    {
+        if (array_key_exists($code, self::ZIP_STATUS_CODES)) {
+            return self::ZIP_STATUS_CODES[$code];
+        }
 
-        if ( array_key_exists($code, self::ZIP_STATUS_CODES) ) return self::ZIP_STATUS_CODES[$code];
-
-        else return sprintf('Unknown status %s', $code);
-
+        return sprintf('Unknown status %s', $code);
     }
-
 }

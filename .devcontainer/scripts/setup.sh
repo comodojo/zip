@@ -75,7 +75,8 @@ if [ "${PACKAGES_ALREADY_INSTALLED}" != "true" ]; then
         zlib1g \
         locales \
         sudo \
-        strace"
+        strace \
+        ssh"
 
     # Install libssl1.1 if available
     if [[ ! -z $(apt-cache --names-only search ^libssl1.1$) ]]; then

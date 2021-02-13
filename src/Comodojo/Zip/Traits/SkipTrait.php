@@ -1,4 +1,6 @@
-<?php namespace Comodojo\Zip\Traits;
+<?php
+
+namespace Comodojo\Zip\Traits;
 
 use \Comodojo\Zip\Interfaces\ZipInterface;
 use \Comodojo\Exception\ZipException;
@@ -21,7 +23,8 @@ use \Comodojo\Exception\ZipException;
  * THE SOFTWARE.
  */
 
-trait SkipTrait {
+trait SkipTrait
+{
 
     /**
      * Select files to skip
@@ -51,18 +54,17 @@ trait SkipTrait {
      * @return  Zip
      * @throws  ZipException
      */
-    public function setSkipMode(string $mode): ZipInterface {
-
+    public function setSkipMode(string $mode): ZipInterface
+    {
         $mode = strtoupper($mode);
 
-        if ( !in_array($mode, $this->supported_skip_modes) ) {
+        if (!in_array($mode, $this->supported_skip_modes)) {
             throw new ZipException("Unsupported skip mode: $mode");
         }
 
         $this->skip_mode = $mode;
 
         return $this;
-
     }
 
     /**
@@ -70,10 +72,8 @@ trait SkipTrait {
      *
      * @return string
      */
-    public function getSkipMode(): string {
-
+    public function getSkipMode(): string
+    {
         return $this->skip_mode;
-
     }
-
 }

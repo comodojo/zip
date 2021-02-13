@@ -18,7 +18,8 @@
 		"felixfbecker.php-debug",
 		"felixfbecker.php-intellisense",
 		"mrmlnc.vscode-apache",
-		"eamodio.gitlens"
+		"eamodio.gitlens",
+		"bmewburn.vscode-intelephense-client"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.

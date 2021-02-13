@@ -1,4 +1,6 @@
-<?php namespace Comodojo\Zip\Traits;
+<?php
+
+namespace Comodojo\Zip\Traits;
 
 use \Comodojo\Zip\Interfaces\ZipInterface;
 use \ZipArchive;
@@ -21,7 +23,8 @@ use \ZipArchive;
  * THE SOFTWARE.
  */
 
-trait CommentTrait {
+trait CommentTrait
+{
 
     abstract public function getArchive(): ?ZipArchive;
 
@@ -30,12 +33,10 @@ trait CommentTrait {
      *
      * @return ZipInterface
      */
-    public function setComment(string $comment): ZipInterface {
-
+    public function setComment(string $comment): ZipInterface
+    {
         $this->getArchive()->setArchiveComment($comment);
-
         return $this;
-
     }
 
     /**
@@ -43,10 +44,8 @@ trait CommentTrait {
      *
      * @return string
      */
-    public function getComment(): ?string {
-
+    public function getComment(): ?string
+    {
         return $this->getArchive()->getArchiveComment();
-
     }
-
 }
