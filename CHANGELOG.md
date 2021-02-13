@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 3.1.1
+> released 13 Feb 2021
+
+* fix invalid types #11
+* add strict_types=1 to all UTs
+* update devcontainer configuration
+* update docker img
+
 ## 3.1.0
 > released 23 Jan 2021
 
