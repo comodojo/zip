@@ -31,13 +31,12 @@
         "ext-zip": "*"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.0",
-        "scrutinizer/ocular": "^1.8"
+        "phpunit/phpunit": "^9.0@stable"
     },
     "minimum-stability": "dev",
     "scripts": {
         "test": "vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover",
         "test-multi": "/usr/bin/bash .docker/test.sh",
-        "scrutinizer": "vendor/bin/ocular code-coverage:upload --format=php-clover coverage.clover"
+        "scrutinizer": "wget https://scrutinizer-ci.com/ocular.phar && php ocular.phar code-coverage:upload --format=php-clover coverage.clover"
     }
 }
