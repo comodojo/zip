@@ -35,4 +35,5 @@ jobs:
       run: composer run-script test
 
     - name: Upload to scrutinizer
+      if: ${{ matrix.php-versions != '8.0'}}
       run: composer run-script scrutinizer
